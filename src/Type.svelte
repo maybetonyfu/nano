@@ -14,10 +14,7 @@
         }
 
         if (ast['type'] === nodeType.VAR) {
-            console.log($context)
-            console.log($contextColors)
             contexts = ($context.get(ast.source) || []).map(c => $contextColors[c])
-            console.log(contexts)
         } else if (ast['type'] === nodeType.APP && ast.children[0].type === nodeType.VAR) {
             contexts = ($context.get(ast.children[0].source) || []).map(c => $contextColors[c])
         }
@@ -36,7 +33,12 @@
             return conColors['Function']
         } else if (ast.type === nodeType.TUPLE) {
             return conColors['Tuple']
-        } else {
+        } else if (ast.type === nodeType.UNIT) {
+            console.log(conColors)
+            console.log('unit')
+            return conColors['Unit']
+        }
+        else {
             return undefined
         }
     }
@@ -49,6 +51,8 @@
     <svelte:self hasSibling={hasSibling} ast={ast.child}></svelte:self>
 {:else if ast.type === nodeType.VAR}
     <Tile color={color} hasSibling={hasSibling} text={ast.source} predicates={contexts}></Tile>
+{:else if ast.type === nodeType.UNIT}
+    <Tile color={color} hasSibling={hasSibling} text={'( )'}></Tile>
 {:else if ast.type === nodeType.CON}
     <Tile color={color} hasSibling={hasSibling} text={ast.source.slice(0,2)}></Tile>
 {:else if ast.type === nodeType.APP}
@@ -66,8 +70,7 @@
 
     </Tile>
 {:else if ast.type === nodeType.TUPLE}
-    <Tile color={color} hasSibling={hasSibling}>
-
+    <Tile color={color} hasSibling={hasSibling} text="(,)">
         {#each ast.children as child, index}
             <svelte:self
                     ast={child}
@@ -77,7 +80,7 @@
 
     </Tile>
 {:else if ast.type === nodeType.LIST}
-    <Tile color={color} hasSibling={hasSibling}>
+    <Tile color={color} hasSibling={hasSibling} text="List">
         <svelte:self
                 hasSibling={hasSibling}
                 ast={ast.child}></svelte:self>

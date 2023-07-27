@@ -8,7 +8,8 @@ export const nodeType = {
     TUPLE: 'tuple',
     PAREN: 'paren',
     LIST: 'list',
-    CLASS: 'class'
+    CLASS: 'class',
+    UNIT: 'unit'
 }
 export const haskellType = grammar(String.raw`
 Signature {
@@ -22,7 +23,8 @@ Signature {
         | "(" spaces type spaces ("," spaces type)+ ")" -- tuple
         | tcon
         | tvar
-
+        | unit
+    unit = "()"
     tfun = type spaces "->" spaces type
     tapp = (~ "forall") (tcon|tvar) (spaces simpleType)+
     tcon = upper (alnum *)
@@ -97,6 +99,13 @@ semantics.addOperation('parse', {
         }
 
     },
+    unit(a) {
+        return {
+            type: nodeType.UNIT,
+            start: a.source.startIdx,
+            end: a.source.endIdx
+        }
+    },
     tfun(a, _x, _y, _z, b) {
         return {
             type: nodeType.FUN,
@@ -142,6 +151,8 @@ export const gatherNames = (ast, vars = new Set(), cons = new Set()) => {
             return {vars: new Set([...vars, ast.source]), cons}
         case nodeType.CON:
             return {vars, cons: new Set([...cons, ast.source])}
+        case nodeType.UNIT:
+            return {vars, cons: new Set([...cons, 'Unit'])}
         case nodeType.PAREN:
             return gatherNames(ast.child)
         case nodeType.APP: {

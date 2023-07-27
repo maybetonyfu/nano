@@ -62,11 +62,29 @@
          style:background-color={color}
          style:clip-path={innerConnerStyle}
     ></div>
-
+    {#if text !== 'List'}
     <span class="text" style:color={textColor}>
         {text ? text : ''}
     </span>
+    {/if}
+    {#if text === 'List'}
+        <svg class="list-icon" width="20" height="13" viewBox="0 0 20 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clip-path="url(#clip0_140_226)">
+                <rect width="3" height="3" fill="black"/>
+                <rect y="5" width="3" height="3" fill="black"/>
+                <rect y="10" width="3" height="3" fill="black"/>
+                <rect x="5" width="15" height="3" fill="black"/>
+                <rect x="5" y="5" width="15" height="3" fill="black"/>
+                <rect x="5" y="10" width="15" height="3" fill="black"/>
+            </g>
+            <defs>
+                <clipPath id="clip0_140_226">
+                    <rect width="20" height="13" fill="white"/>
+                </clipPath>
+            </defs>
+        </svg>
 
+    {/if}
     <div class="predicates">
         {#each predicates as pred}
             <div class="pred-wrapper">
@@ -77,7 +95,7 @@
     </div>
 
     {#if variant === 'function-curried'}
-        <svg width="39" height="18" viewBox="0 0 39 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg class="function-icon" width="39" height="18" viewBox="0 0 39 18" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M1 1H7L15.5 9H9.5L1 1Z" />
             <path d="M1 17H7L15.5 9H9.5L1 17Z" />
             <path d="M12.5 1H18.5L27 9H21L12.5 1Z" />
@@ -90,7 +108,7 @@
             <slot></slot>
         </div>
     {:else if variant === 'function'}
-        <svg width="39" height="18" viewBox="0 0 39 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg class="function-icon" width="39" height="18" viewBox="0 0 39 18" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M1 1H7L15.5 9H9.5L1 1Z" />
             <path d="M1 17H7L15.5 9H9.5L1 17Z" />
             <path d="M12.5 1H18.5L27 9H21L12.5 1Z" />
@@ -167,12 +185,18 @@
         font-family: 'Orbitron', sans-serif;
         font-weight: 500;
     }
-    svg {
+    .function-icon {
         position: absolute;
         top: 3px;
         left: 10px;
         height: 1rem;
         fill: white;
+    }
+
+    .list-icon {
+        position: absolute;
+        bottom: 8px;
+        left: 5px;
     }
     .predicates {
         position: absolute;

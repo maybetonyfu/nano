@@ -47,10 +47,7 @@ const defaultConColors = {
     "Maybe": "#9790E8",
     "IO": "#75DDE3",
     "Tuple": '#70D8F9',
-    // "Int": "#F8F8F8",
-    // "Char": "#F8F8F8",
-    // 'Bool': "#F8F8F8",
-    // "State": "#B4F59D"
+    "Unit": '#F8F8F8'
 }
 
 const defaultContextColors = {

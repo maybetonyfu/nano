@@ -1,0 +1,25 @@
+{
+  "name": "tetris-diagram",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite --host",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chance": "^1.1.11",
+    "chroma-js": "^2.4.2",
+    "ohm-js": "^17.1.0"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^2.4.3",
+    "svelte": "^4.1.1",
+    "vite": "^4.4.7"
+  }
+}

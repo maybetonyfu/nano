@@ -86,11 +86,14 @@
                 ast={ast.child}></svelte:self>
     </Tile>
 {:else if ast.type === nodeType.FUN && ast.result.type === nodeType.FUN}
-    <Tile variant="function-curried" color={color} hasSibling={hasSibling}>
-        <svelte:self ast={ast.arg}></svelte:self>
+    <div style="display: grid;grid-template-columns: repeat(2, auto); height: 100%">
+        <Tile variant="function-curried" color={color} hasSibling={hasSibling}>
+            <svelte:self ast={ast.arg}></svelte:self>
 
-    </Tile>
-    <svelte:self ast={ast.result}></svelte:self>
+        </Tile>
+        <svelte:self ast={ast.result}></svelte:self>
+    </div>
+
 {:else if ast.type === nodeType.FUN}
     <Tile color={color} variant="function"
           hasSibling={hasSibling}>

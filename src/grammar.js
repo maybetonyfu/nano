@@ -186,6 +186,7 @@ export const gatherNames = (ast, vars = new Set(), cons = new Set()) => {
 }
 
 export const countArity = ast => {
+    console.log(ast)
     if (ast['type'] === nodeType.FUN) {
         return 1 + countArity(ast['result'])
     } else {

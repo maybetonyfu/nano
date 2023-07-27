@@ -27,8 +27,8 @@ Signature {
     unit = "()"
     tfun = type spaces "->" spaces type
     tapp = (~ "forall") (tcon|tvar) (spaces simpleType)+
-    tcon = upper (alnum *)
-    tvar = lower (alnum *)
+    tcon = upper ((alnum | "'") *)
+    tvar = lower ((alnum | "'") *)
     tclass = tcon spaces tvar -- single
       | "(" tcon (spaces (tvar|tcon))+ ")" -- multiple
     context = tclass

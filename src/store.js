@@ -62,7 +62,6 @@ export const cons = writable(new Set())
 export const varColors = writable({})
 export const conColors = writable({})
 export const contextColors = writable({})
-export const arity = writable(0)
 export const context = writable(new Map())
 
 signature.subscribe(sig => {
@@ -86,10 +85,8 @@ signature.subscribe(sig => {
 
         if (ast_['context']) {
             const predicates = ast_['context'] ? ast_['context']['predicates'] : []
-            console.log(predicates)
             const contextColors_ = Object.fromEntries(
                 Array.from(new Set(predicates.map(p => p['class']['source']))).map((c, i) => {
-                    console.log(c)
                     return [c, defaultContextColors[c] || localContextColors[i]]
                 })
             )
@@ -110,7 +107,6 @@ signature.subscribe(sig => {
         cons.set(names.cons)
         varColors.set(varColors_)
         conColors.set(conColors_)
-        arity.set(countArity(ast_))
 
 
     } else {

@@ -1,5 +1,5 @@
 <script>
-    import {signature, ast, arity, isValid} from "./store.js";
+    import {signature, ast, isValid} from "./store.js";
     import Type from "./Type.svelte"
 
 </script>
@@ -18,10 +18,8 @@
     <div>
         Graphic notation:
     </div>
-    <div style="overflow-x: auto">
-        <div style="display:grid;width: max-content" style:grid-template-columns={`repeat(${$arity === 0 ? 1:$arity}, auto)`}>
-            <Type ast={$ast}></Type>
-        </div>
+    <div style="width:max-content">
+        <Type ast={$ast}></Type>
     </div>
 
 </main>
@@ -29,7 +27,7 @@
 <style>
     :global(body) {
         display: grid;
-        grid-template-columns: 1fr minmax(800px, 1000px) 1fr;
+        grid-template-columns: 1fr minmax(900px, auto) 1fr;
         grid-template-rows: auto;
         font-family: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
     }

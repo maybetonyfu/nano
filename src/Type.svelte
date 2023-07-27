@@ -34,8 +34,6 @@
         } else if (ast.type === nodeType.TUPLE) {
             return conColors['Tuple']
         } else if (ast.type === nodeType.UNIT) {
-            console.log(conColors)
-            console.log('unit')
             return conColors['Unit']
         }
         else {

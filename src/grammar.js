@@ -17,14 +17,16 @@ Signature {
                 | type
     type = tfun | tapp  | simpleType
     simpleType =
-        | "forall" spaces (tvar spaces)* "." spaces simpleType -- forall
-        | "(" (tfun | tapp) ")" -- paren
-        | "[" type "]" -- list
-        | "(" spaces type spaces ("," spaces type)+ ")" -- tuple
+        | tforall
         | tcon
         | tvar
         | unit
+        | "(" (tforall | tfun | tapp) ")" -- paren
+        | "[" type "]" -- list
+        | "(" spaces type spaces ("," spaces type)+ ")" -- tuple
+
     unit = "()"
+    tforall = "forall" spaces (tvar spaces)* "." spaces type
     tfun = type spaces "->" spaces type
     tapp = (~ "forall") (tcon|tvar) (spaces simpleType)+
     tcon = upper ((alnum | "'") *)
@@ -67,10 +69,8 @@ semantics.addOperation('parse', {
             predicates: classes.flatMap(c => c.predicates)
         }
     },
-    simpleType_forall(a, b, c, d, e, f, g) {
-        return {
-            type: "Unsupported"
-        }
+    tforall(a, b, c, d, e, f, g) {
+        return g.parse()
     },
     simpleType_paren(_a, b, _c) {
         return {

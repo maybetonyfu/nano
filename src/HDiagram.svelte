@@ -1,8 +1,8 @@
 <script>
-    import { getContext } from "svelte";
-    import {nodeType} from "./grammar.js";
-    import Tile from "./HTile.svelte";
-    export let ast;
+        import { getContext } from "svelte";
+        import {nodeType} from "./grammar.js";
+        import Tile from "./HTile.svelte";
+        export let ast;
     // export let sig;
     export let hasSibling = false;
     let varColors = getContext('varColors');

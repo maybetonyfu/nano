@@ -1,5 +1,6 @@
 <script>
     import { writable } from "svelte/store";
+    import {levels} from "./level.js";
     import HType from "./HType.svelte";
     let level = 1;
     let intro = true;
@@ -7,109 +8,8 @@
     let answer = "zeroToHero = undefined";
     let conColors = writable({});
     let cons = writable(new Set());
-    let levels = [
-        {
-            init: ["data Zero a = Zero", "data Hero a = Hero"],
-            target: "Zero a -> Hero a",
-            availableFunctions: [
-                { name: "runZero", sig: "Zero a -> a", comment: "" },
-                { name: "mkHero", sig: "a -> Hero a", comment: "" },
-                {
-                    name: "(.)",
-                    sig: "(b -> c) -> (a -> b) -> a -> c",
-                    comment: "",
-                },
-            ],
-        },
-        {
-            init: ["data Zero a = Zero", "data Hero a = Hero"],
-            target: "Zero a -> Hero (a, a)",
-            availableFunctions: [
-                { name: "f1", sig: "Zero a -> Hero a", comment: "" },
-                { name: "f2", sig: "Zero a -> (a, a)", comment: "" },
-                { name: "f3", sig: "Hero a -> Hero (a, a)", comment: "" },
-                {
-                    name: "(.)",
-                    sig: "(b -> c) -> (a -> b) -> a -> c",
-                    comment: "",
-                },
-            ],
-        },
-        {
-            init: ["data Zero a b = Zero", "data Hero a b = Hero"],
-            target: "Zero a b -> Hero b b",
-            availableFunctions: [
-                { name: "f1", sig: "Zero a b -> Hero b a", comment: "" },
-                { name: "f2", sig: "Zero a a -> Hero a a", comment: "" },
-                { name: "f3", sig: "Zero a b -> Zero b a", comment: "" },
-                { name: "f4", sig: "Zero a b -> Zero b b", comment: "" },
-                {
-                    name: "(.)",
-                    sig: "(b -> c) -> (a -> b) -> a -> c",
-                    comment: "",
-                },
-            ],
-        },
-        {
-            init: ["data Zero a b c = Zero", "data Hero a b = Hero"],
-            target: "Zero a b c -> Hero c a",
-            answer: "zeroToHero = undefined",
-            availableFunctions: [
-                { name: "f1", sig: "Zero a b c-> Zero c b a", comment: "" },
-                { name: "f2", sig: "Zero a b c -> Zero a c c", comment: "" },
-                { name: "f3", sig: "Zero a b c -> Hero b c", comment: "" },
-                {
-                    name: "(.)",
-                    sig: "(b -> c) -> (a -> b) -> a -> c",
-                    comment: "",
-                },
-            ],
-        },
-        {
-            init: ["data Zero a b c = Zero", "data Hero a b c = Hero"],
-            target: "(a -> d) -> (b -> d)  -> (c -> d) -> Zero a b c ->  Hero a d c",
-            availableFunctions: [
-                {
-                    name: "fmap",
-                    sig: "(c -> d) -> Zero a b c -> Zero a b d",
-                    comment: "",
-                },
-                { name: "f1", sig: "Zero a b c -> Zero c a b", comment: "" },
-                { name: "f2", sig: "Zero a b c -> Hero a b c", comment: "" },
-                {
-                    name: "(.)",
-                    sig: "(b -> c) -> (a -> b) -> a -> c",
-                    comment: "",
-                },
-            ],
-        },
-        {
-            init: ["data Zero a b c d = Zero", "data Hero a b c d = Hero"],
-            target: "Zero a b c d ->  Hero d d d d",
-            availableFunctions: [
-                {
-                    name: "f1",
-                    sig: "Zero a b c d -> Zero a a b b",
-                    comment: "",
-                },
-                {
-                    name: "f2",
-                    sig: "Zero a b c d -> Hero c c d d",
-                    comment: "",
-                },
-                {
-                    name: "f3",
-                    sig: "Zero a b c d -> Zero d c b a",
-                    comment: "",
-                },
-                {
-                    name: "(.)",
-                    sig: "(b -> c) -> (a -> b) -> a -> c",
-                    comment: "",
-                },
-            ],
-        },
-    ];
+    let actualType = 'a'
+
     $: currentLevel = levels[level - 1];
     $: target = currentLevel.target;
     $: availableFunctions = currentLevel.availableFunctions;
@@ -150,12 +50,28 @@
         });
         let result = await response.json();
         status = [result["status"], result["message"]];
+        if (result["status"] === "failed") {
+            let text = [
+                ...init,
+                ...funs,
+                t,
+            ].join("\n");
+            let queryResponse = await fetch('https://nano.typecheck.me/zeroToHero', {
+                method: "POST",
+                body: text,
+                headers: { "Content-Type": "text/plain" },
+            })
+            let queryResult = await queryResponse.json();
+            actualType = queryResult["message"].split("::")[1].trim();
+            console.log(actualType)
+        }
     };
 
     let nextLevel = () => {
         level = level + 1;
         status = ["Init", "You did not make any changes."];
         answer = "zeroToHero = undefined";
+        actualType = 'a'
     };
 
     let skip = () => {
@@ -163,6 +79,7 @@
             level = level + 1
             status = ["Init", "You did not make any changes."];
              answer = "zeroToHero = undefined";
+             actualType = 'a'
         } else {
             alert("This is the last puzzle")
         }
@@ -203,26 +120,27 @@
         <div>
             Level {level} / {levels.length}
         </div>
-        <div />
+        <div></div>
     </nav>
     <section class="left h-full flex">
         <div class="w-1/2 p-2 flex flex-col h-full w-full">
             <div class=" h-1/2 flex flex-col">
                 <div class="bg-blue-200 rounded-md p-2 mb-2">
                     Please complete the following code. 
-                    Click the <span class="inline-block bg-blue-300 px-1 py-0.5 rounded-md">Attempt</span> button at top left to check your answer. The
+                    Click the <span class="inline-block bg-blue-300 px-1 py-0.5 rounded-md">Attempt</span>
+                    button at top left to check your answer. The
                     type is defined for you. Change only the function
                     declaration. Available functions are listed on the
                     right side.
                 </div>
-                <div class=" code p-2 bg-white rounded-t-md">
+                <div class="code p-2 bg-white rounded-t-md">
                     zeroToHero :: {target}
                 </div>
                 <textarea
                     spellcheck="false"
-                    class=" code bg-white w-full p-2 h-full outline-none rounded-b-md"
+                    class="code bg-white w-full p-2 h-full outline-none rounded-b-md"
                     bind:value={answer}
-                />
+                ></textarea>
             </div>
 
             <div class="output h-1/2 flex flex-col items-start">
@@ -239,7 +157,7 @@
                         >
                         Status: Passed
                         </div>
-                    {:else if status[0] == "failed"}
+                    {:else if status[0] === "failed"}
                         <div
                             class="p-2 bg-red-500 text-white my-2 rounded-md w-full"
                         >
@@ -274,6 +192,14 @@
                     <div>zeroToHero :: {target}</div>
                     {#if showDiagram}
                         <HType sig={target} {conColors} {cons} />
+                    {/if}
+                </div>
+
+                <h1 class="font-bold">Actual Type</h1>
+                <div class="code bg-white my-3 p-2 rounded-md">
+                    <div>zeroToHero :: {actualType}</div>
+                    {#if showDiagram}
+                        <HType sig={actualType} {conColors} {cons} />
                     {/if}
                 </div>
                 <h1 class="font-bold">Available Functions</h1>

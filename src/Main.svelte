@@ -50,11 +50,17 @@
         });
         let result = await response.json();
         status = [result["status"], result["message"]];
-        if (result["status"] === "failed") {
-            let text = [
+    }
+
+
+    $: (async () => {
+        let funs = availableFunctions.map(
+            (f) => `${f.name} :: ${f.sig}\n${f.name} = undefined`
+        );
+        let text = [
                 ...init,
                 ...funs,
-                t,
+                answer,
             ].join("\n");
             let queryResponse = await fetch('https://nano.typecheck.me/zeroToHero', {
                 method: "POST",
@@ -62,10 +68,10 @@
                 headers: { "Content-Type": "text/plain" },
             })
             let queryResult = await queryResponse.json();
-            actualType = queryResult["message"].split("::")[1].trim();
-            console.log(actualType)
-        }
-    };
+            if (queryResult['status'] === 'ok' && queryResult['message'].includes('::')) {
+                actualType = queryResult["message"].split("::")[1].trim();
+            }
+    })()
 
     let nextLevel = () => {
         level = level + 1;

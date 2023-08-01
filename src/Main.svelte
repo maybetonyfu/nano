@@ -156,6 +156,16 @@
         status = ["Init", "You did not make any changes."];
         answer = "zeroToHero = undefined";
     };
+
+    let skip = () => {
+        if (level < levels.length) {
+            level = level + 1
+            status = ["Init", "You did not make any changes."];
+             answer = "zeroToHero = undefined";
+        } else {
+            alert("This is the last puzzle")
+        }
+    }
 </script>
 
 <main class="flex h-full flex-col bg-gray-200 overflow-hidden">
@@ -164,6 +174,10 @@
             <button
                 class="bg-blue-300 px-2 py-1 rounded-md"
                 on:click={handleAttempt}>Attempt</button
+            >
+            <button
+                class="bg-blue-300 px-2 py-1 rounded-md"
+                on:click={skip}>Skip</button
             >
             {#if showNextLevel}
                 <button

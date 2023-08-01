@@ -201,26 +201,26 @@
                     <div
                         class="p-2 bg-gray-400 text-white my-2 rounded-md w-full"
                     >
-                        Checking
+                         Status: Checking
                     </div>
                 {:then _}
                     {#if status[0] === "ok"}
                         <div
                             class="p-2 bg-green-500 text-white my-2 rounded-md w-full"
                         >
-                            Passed
+                        Status: Passed
                         </div>
                     {:else if status[0] == "failed"}
                         <div
                             class="p-2 bg-red-500 text-white my-2 rounded-md w-full"
                         >
-                            Failed
+                        Status: Failed
                         </div>
                     {:else}
                         <div
                             class="p-2 bg-gray-400 text-white my-2 rounded-md w-full"
                         >
-                            Init
+                        Status: Init
                         </div>
                     {/if}
                 {/await}

@@ -142,7 +142,7 @@
             `zeroToHero :: ${target}`,
             t,
         ].join("\n");
-        let response = await fetch("http://172.105.190.123:8080/", {
+        let response = await fetch("https://nano.typecheck.me/", {
             method: "POST",
             body: text,
             headers: { "Content-Type": "text/plain" },

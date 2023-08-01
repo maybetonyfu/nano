@@ -2,6 +2,7 @@
     import { writable } from "svelte/store";
     import HType from "./HType.svelte";
     let level = 1;
+    let intro = true;
     let status = ["Init", "You did not make any changes."];
     let answer = "zeroToHero = undefined";
     let conColors = writable({});
@@ -66,7 +67,7 @@
         },
         {
             init: ["data Zero a b c = Zero", "data Hero a b c = Hero"],
-            target: "Zero a b c -> (a -> d) -> (b -> d)  -> (c -> d) ->  Hero a d c",
+            target: "(a -> d) -> (b -> d)  -> (c -> d) -> Zero a b c ->  Hero a d c",
             availableFunctions: [
                 {
                     name: "fmap",
@@ -166,7 +167,20 @@
             alert("This is the last puzzle")
         }
     }
+    let dismiss = () => {
+        intro = false
+        console.log('hello')
+    }
 </script>
+
+<dialog open={intro} class=" bg-indigo-800 inset-y-1/2 text-white p-10 z-10 rounded-md w-1/2">
+    <p class="my-2">Welcome to the game of Zero to Hero. In this game, you will complete each level by implementing the function "zeroToHero". 
+        This function convert a "Zero" type value to a "Hero" type value. The definition of "Zero" and "Hero" may vary from level to level. 
+        Each level has a list of functions available. Make sure to use them as they are the only functions you can use.</p>
+    <form method="dialog">
+        <button class="bg-green-200 text-black px-4 py-1 rounded-md" on:click={dismiss}>OK</button>
+    </form>
+</dialog>
 
 <main class="flex h-full flex-col bg-gray-200 overflow-hidden">
     <nav class=" flex bg-gray-100 p-1 justify-between items-center">
@@ -283,4 +297,5 @@
     .code {
         font-family: "Roboto Mono", monospace;
     }
+
 </style>

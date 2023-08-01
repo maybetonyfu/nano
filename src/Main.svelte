@@ -209,9 +209,10 @@
         <div class="w-1/2 p-2 flex flex-col h-full w-full">
             <div class=" h-1/2 flex flex-col">
                 <div class="bg-blue-200 rounded-md p-2 mb-2">
-                    Please complete the following code and pass type-check. The
-                    type signature is defined for you. Change only the function
-                    declaration. Other available functions are listed on the
+                    Please complete the following code. 
+                    Click the <span class="inline-block bg-blue-300 px-1 py-0.5 rounded-md">Attempt</span> button at top left to check your answer. The
+                    type is defined for you. Change only the function
+                    declaration. Available functions are listed on the
                     right side.
                 </div>
                 <div class=" code p-2 bg-white rounded-t-md">

@@ -1,20 +1,25 @@
 <script>
+    import { getContext } from "svelte";
     import {nodeType} from "./grammar.js";
-    import Tile from "./Tile.svelte";
-    import {varColors, conColors, context, contextColors} from "./store.js";
+    import Tile from "./HTile.svelte";
     export let ast;
+    // export let sig;
     export let hasSibling = false;
-
-    let color, contexts;
+    let varColors = getContext('varColors');
+    let conColors = getContext('conColors');
+    let classColors = getContext('classColors');
+    let typeClasses = getContext('typeClasses')
+    let currentClasses;
+    let color;
     $: {
         if (ast['type']) {
             color = calculateColor(ast, {varColors: $varColors, conColors: $conColors})
         }
 
         if (ast['type'] === nodeType.VAR) {
-            contexts = ($context.get(ast.source) || []).map(c => $contextColors[c])
+            currentClasses = ($typeClasses.get(ast.source) || []).map(c => $classColors[c])
         } else if (ast['type'] === nodeType.APP && ast.children[0].type === nodeType.VAR) {
-            contexts = ($context.get(ast.children[0].source) || []).map(c => $contextColors[c])
+            currentClasses = ($typeClasses.get(ast.children[0].source) || []).map(c => $classColors[c])
         }
     }
 
@@ -46,7 +51,7 @@
 {:else if ast.type === nodeType.PAREN}
     <svelte:self hasSibling={hasSibling} ast={ast.child}></svelte:self>
 {:else if ast.type === nodeType.VAR}
-    <Tile color={color} hasSibling={hasSibling} text={ast.source} predicates={contexts}></Tile>
+    <Tile color={color} hasSibling={hasSibling} text={ast.source} predicates={currentClasses}></Tile>
 {:else if ast.type === nodeType.UNIT}
     <Tile color={color} hasSibling={hasSibling} text={'( )'}></Tile>
 {:else if ast.type === nodeType.CON}
@@ -55,7 +60,7 @@
     <Tile color={color}
           hasSibling={hasSibling}
           text={ast.children[0].source.slice(0,2)}
-          predicates={contexts}
+          predicates={currentClasses}
     >
         {#each ast.children.slice(1) as child, index}
             <svelte:self

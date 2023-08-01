@@ -23,7 +23,7 @@ Signature {
         | unit
         | "(" (tforall | tfun | tapp) ")" -- paren
         | "[" type "]" -- list
-        | "(" spaces type spaces ("," spaces type)+ ")" -- tuple
+        | "(" spaces type spaces ("," spaces type spaces)+ ")" -- tuple
 
     unit = "()"
     tforall = "forall" spaces (tvar spaces)* "." spaces type
@@ -88,14 +88,14 @@ semantics.addOperation('parse', {
             end: c.source.endIdx
         }
     },
-    simpleType_tuple(a, b, c, d, e, f, g, h) {
-        //"(" spaces type spaces ("," spaces type)+ ")"
-        // a   b      c    d       e   f      g       h
+    simpleType_tuple(a, b, c, d, e, f, g, h, i) {
+        //"(" spaces type spaces ("," spaces type spaces)+ ")"
+        // a   b      c    d       e   f      g       h    i
         return {
             type: nodeType.TUPLE,
             children: [c.parse(), ...g.parse()],
             start: a.source.startIdx,
-            end: h.source.endIdx
+            end: i.source.endIdx
         }
 
     },

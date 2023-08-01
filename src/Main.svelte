@@ -1,55 +1,272 @@
 <script>
-    import {signature, ast, isValid} from "./store.js";
-    import Type from "./Type.svelte"
+    import { writable } from "svelte/store";
+    import HType from "./HType.svelte";
+    let level = 1;
+    let status = ["Init", "You did not make any changes."];
+    let answer = "zeroToHero = undefined";
+    let conColors = writable({});
+    let cons = writable(new Set());
+    let levels = [
+        {
+            init: ["data Zero a = Zero", "data Hero a = Hero"],
+            target: "Zero a -> Hero a",
+            availableFunctions: [
+                { name: "runZero", sig: "Zero a -> a", comment: "" },
+                { name: "mkHero", sig: "a -> Hero a", comment: "" },
+                {
+                    name: "(.)",
+                    sig: "(b -> c) -> (a -> b) -> a -> c",
+                    comment: "",
+                },
+            ],
+        },
+        {
+            init: ["data Zero a = Zero", "data Hero a = Hero"],
+            target: "Zero a -> Hero (a, a)",
+            availableFunctions: [
+                { name: "f1", sig: "Zero a -> Hero a", comment: "" },
+                { name: "f2", sig: "Zero a -> (a, a)", comment: "" },
+                { name: "f3", sig: "Hero a -> Hero (a, a)", comment: "" },
+                {
+                    name: "(.)",
+                    sig: "(b -> c) -> (a -> b) -> a -> c",
+                    comment: "",
+                },
+            ],
+        },
+        {
+            init: ["data Zero a b = Zero", "data Hero a b = Hero"],
+            target: "Zero a b -> Hero b b",
+            availableFunctions: [
+                { name: "f1", sig: "Zero a b -> Hero b a", comment: "" },
+                { name: "f2", sig: "Zero a a -> Hero a a", comment: "" },
+                { name: "f3", sig: "Zero a b -> Zero b a", comment: "" },
+                { name: "f4", sig: "Zero a b -> Zero b b", comment: "" },
+                {
+                    name: "(.)",
+                    sig: "(b -> c) -> (a -> b) -> a -> c",
+                    comment: "",
+                },
+            ],
+        },
+        {
+            init: ["data Zero a b c = Zero", "data Hero a b = Hero"],
+            target: "Zero a b c -> Hero c a",
+            answer: "zeroToHero = undefined",
+            availableFunctions: [
+                { name: "f1", sig: "Zero a b c-> Zero c b a", comment: "" },
+                { name: "f2", sig: "Zero a b c -> Zero a c c", comment: "" },
+                { name: "f3", sig: "Zero a b c -> Hero b c", comment: "" },
+                {
+                    name: "(.)",
+                    sig: "(b -> c) -> (a -> b) -> a -> c",
+                    comment: "",
+                },
+            ],
+        },
+        {
+            init: ["data Zero a b c = Zero", "data Hero a b c = Hero"],
+            target: "Zero a b c -> (a -> d) -> (b -> d)  -> (c -> d) ->  Hero a d c",
+            availableFunctions: [
+                {
+                    name: "fmap",
+                    sig: "(c -> d) -> Zero a b c -> Zero a b d",
+                    comment: "",
+                },
+                { name: "f1", sig: "Zero a b c -> Zero c a b", comment: "" },
+                { name: "f2", sig: "Zero a b c -> Hero a b c", comment: "" },
+                {
+                    name: "(.)",
+                    sig: "(b -> c) -> (a -> b) -> a -> c",
+                    comment: "",
+                },
+            ],
+        },
+        {
+            init: ["data Zero a b c d = Zero", "data Hero a b c d = Hero"],
+            target: "Zero a b c d ->  Hero d d d d",
+            availableFunctions: [
+                {
+                    name: "f1",
+                    sig: "Zero a b c d -> Zero a a b b",
+                    comment: "",
+                },
+                {
+                    name: "f2",
+                    sig: "Zero a b c d -> Hero c c d d",
+                    comment: "",
+                },
+                {
+                    name: "f3",
+                    sig: "Zero a b c d -> Zero d c b a",
+                    comment: "",
+                },
+                {
+                    name: "(.)",
+                    sig: "(b -> c) -> (a -> b) -> a -> c",
+                    comment: "",
+                },
+            ],
+        },
+    ];
+    $: currentLevel = levels[level - 1];
+    $: target = currentLevel.target;
+    $: availableFunctions = currentLevel.availableFunctions;
+    $: isLastPuzzle = level === levels.length;
+    $: showNextLevel = !isLastPuzzle && status[0] === "ok";
+    $: init = currentLevel.init;
+    $: showDiagram = level % 2 === 0;
+    $: {
+        if (level === levels.length && status[0] === "ok") {
+            confirm("You have completed all puzzles. Congratulations!");
+        }
+    }
+    let checking = Promise.resolve();
 
+    let handleAttempt = () => {
+        if (answer.includes("undefined")) {
+            status = ["failed", "Using undefined is not allowed"];
+        } else {
+            checking = typeCheck(answer);
+        }
+    };
+
+    let typeCheck = async (t) => {
+        let funs = availableFunctions.map(
+            (f) => `${f.name} :: ${f.sig}\n${f.name} = undefined`
+        );
+        let text = [
+            ...init,
+            "und = undefined",
+            ...funs,
+            `zeroToHero :: ${target}`,
+            t,
+        ].join("\n");
+        let response = await fetch("http://172.105.190.123:8080/", {
+            method: "POST",
+            body: text,
+            headers: { "Content-Type": "text/plain" },
+        });
+        let result = await response.json();
+        status = [result["status"], result["message"]];
+    };
+
+    let nextLevel = () => {
+        level = level + 1;
+        status = ["Init", "You did not make any changes."];
+        answer = "zeroToHero = undefined";
+    };
 </script>
 
-<main>
-    <div>
-        <label>Haskell Type Signature:</label>
-    </div>
-    <div>
-        <input bind:value={$signature}/>
-    </div>
-    <div>
-        Text notation:
-    </div>
-    <div style:color={$isValid ? "#5ECE9F" : "#EB6868"}>{$signature}</div>
-    <div>
-        Graphic notation:
-    </div>
-    <div style="width:max-content">
-        <Type ast={$ast}></Type>
-    </div>
+<main class="flex h-full flex-col bg-gray-200 overflow-hidden">
+    <nav class=" flex bg-gray-100 p-1 justify-between items-center">
+        <div>
+            <button
+                class="bg-blue-300 px-2 py-1 rounded-md"
+                on:click={handleAttempt}>Attempt</button
+            >
+            {#if showNextLevel}
+                <button
+                    class="bg-green-500 text-white px-2 py-1 rounded-md"
+                    on:click={nextLevel}>Next Puzzle</button
+                >
+            {/if}
+        </div>
+        <div>
+            Level {level} / {levels.length}
+        </div>
+        <div />
+    </nav>
+    <section class="left h-full flex">
+        <div class="w-1/2 p-2 flex flex-col h-full w-full">
+            <div class=" h-1/2 flex flex-col">
+                <div class="bg-blue-200 rounded-md p-2 mb-2">
+                    Please complete the following code and pass type-check. The
+                    type signature is defined for you. Change only the function
+                    declaration. Other available functions are listed on the
+                    right side.
+                </div>
+                <div class=" code p-2 bg-white rounded-t-md">
+                    zeroToHero :: {target}
+                </div>
+                <textarea
+                    spellcheck="false"
+                    class=" code bg-white w-full p-2 h-full outline-none rounded-b-md"
+                    bind:value={answer}
+                />
+            </div>
 
+            <div class="output h-1/2 flex flex-col items-start">
+                {#await checking}
+                    <div
+                        class="p-2 bg-gray-400 text-white my-2 rounded-md w-full"
+                    >
+                        Checking
+                    </div>
+                {:then _}
+                    {#if status[0] === "ok"}
+                        <div
+                            class="p-2 bg-green-500 text-white my-2 rounded-md w-full"
+                        >
+                            Passed
+                        </div>
+                    {:else if status[0] == "failed"}
+                        <div
+                            class="p-2 bg-red-500 text-white my-2 rounded-md w-full"
+                        >
+                            Failed
+                        </div>
+                    {:else}
+                        <div
+                            class="p-2 bg-gray-400 text-white my-2 rounded-md w-full"
+                        >
+                            Init
+                        </div>
+                    {/if}
+                {/await}
+
+                <div class="p-2 bg-gray-100 rounded-t-md">Output</div>
+                <div
+                    class="p-2 bg-gray-700 text-white rounded-b-md rounded-r-md h-full w-full relative"
+                >
+                    <div class="absolute inset-2 overflow-auto">
+                        <pre>{status[1]}</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <aside
+            class="right m-2 p-2 w-1/2 bg-gray-100 w-full rounded-md relative"
+        >
+            <div class="absolute inset-2 overflow-auto">
+                <h1 class="font-bold">To Implement</h1>
+                <div class="code bg-white my-3 p-2 rounded-md">
+                    <div>zeroToHero :: {target}</div>
+                    {#if showDiagram}
+                        <HType sig={target} {conColors} {cons} />
+                    {/if}
+                </div>
+                <h1 class="font-bold">Available Functions</h1>
+                {#each availableFunctions as fun}
+                    <div class="code bg-white my-2 p-2 rounded-md">
+                        <div>{fun.name} :: {fun.sig}</div>
+                        {#if showDiagram}
+                            <HType sig={fun.sig} {conColors} {cons} />
+                        {/if}
+                    </div>
+                {/each}
+            </div>
+        </aside>
+    </section>
 </main>
 
 <style>
-    :global(body) {
-        display: grid;
-        grid-template-columns: 1fr minmax(900px, auto) 1fr;
-        grid-template-rows: auto;
-        font-family: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
-    }
-    :global(#app) {
-        grid-column: 2/3;
-    }
-    main {
-        width: calc(100% - 300px);
-        display: flex;
-        flex-direction: column;
-        font-size: 1.5rem;
+    :global(body, html, #app) {
+        height: 100%;
     }
 
-    * + * {
-        margin-top: 1.5rem;
+    .code {
+        font-family: "Roboto Mono", monospace;
     }
-    input {
-        font-size: 1rem;
-        width: 100%;
-        padding: 0.5rem;
-        border-radius: 0.5rem;
-        border: 1px solid #ccc;
-    }
-
 </style>

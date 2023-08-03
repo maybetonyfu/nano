@@ -18,6 +18,8 @@
     $: showNextLevel = !isLastPuzzle && status[0] === "ok";
     $: init = currentLevel.init;
     $: showDiagram = level % 2 === 0;
+    $: testing = currentLevel.testing
+    $: zeroType = currentLevel.zeroType
     $: {
         if (level === levels.length && status[0] === "ok") {
             confirm("You have completed all puzzles. Congratulations!");
@@ -67,7 +69,7 @@
                 `data SKOLEMe = E`,
                 ...funs,
                 answer,
-                'b = zeroToHero (Zero :: Zero SKOLEMa)',
+                testing,
             ].join("\n");
             let queryResponse = await fetch('https://nano.typecheck.me/b', {
                 method: "POST",
@@ -76,7 +78,7 @@
             })
             let queryResult = await queryResponse.json();
             if (queryResult['status'] === 'ok' && queryResult['message'].includes('::')) {
-                actualType = 'Zero sa -> ' + queryResult["message"].split("::")[1].trim().replaceAll('SKOLEM', 's');
+                actualType = zeroType + ' -> ' + queryResult["message"].split("::")[1].trim().replaceAll('SKOLEM', 's');
                 validExpression = true
             } else {
                 validExpression = false

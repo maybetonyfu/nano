@@ -2,7 +2,8 @@ export let levels = [
     {
         init: ["data Zero a = Zero", "data Hero a = Hero"],
         target: "Zero a -> Hero a",
-        testing: 'zeroToHero Zero = undefined',
+        testing: 'b = zeroToHero (Zero :: Zero SKOLEMa)',
+        zeroType: 'Zero sa', 
         availableFunctions: [
             {name: "runZero", sig: "Zero a -> a", comment: ""},
             {name: "mkHero", sig: "a -> Hero a", comment: ""},
@@ -17,7 +18,8 @@ export let levels = [
     {
         init: ["data Zero a = Zero", "data Hero a = Hero"],
         target: "Zero a -> Hero (a, a)",
-        testing: 'zeroToHero Zero = undefined',
+        testing: 'b = zeroToHero (Zero :: Zero SKOLEMa)',
+        zeroType: 'Zero sa', 
         availableFunctions: [
             {name: "f1", sig: "Zero a -> Hero a", comment: ""},
             {name: "f2", sig: "Zero a -> (a, a)", comment: ""},
@@ -32,6 +34,8 @@ export let levels = [
     {
         init: ["data Zero a b = Zero", "data Hero a b = Hero"],
         target: "Zero a b -> Hero b b",
+        testing: 'b = zeroToHero (Zero :: Zero SKOLEMa SKOLEMb)',
+        zeroType: 'Zero sa sb', 
         availableFunctions: [
             {name: "f1", sig: "Zero a b -> Hero b a", comment: ""},
             {name: "f2", sig: "Zero a a -> Hero a a", comment: ""},
@@ -48,7 +52,8 @@ export let levels = [
         init: ["data Zero a b c = Zero", "data Hero a b = Hero"],
         target: "Zero a b c -> Hero c a",
         answer: "zeroToHero = undefined",
-        testing: 'zeroToHero Zero = undefined',
+        testing:  'b = zeroToHero (Zero :: Zero SKOLEMa SKOLEMb SKOLEMc)',
+        zeroType: 'Zero sa sb sc', 
         availableFunctions: [
             {name: "f1", sig: "Zero a b c-> Zero c b a", comment: ""},
             {name: "f2", sig: "Zero a b c -> Zero a c c", comment: ""},
@@ -63,6 +68,8 @@ export let levels = [
     {
         init: ["data Zero a b c = Zero", "data Hero a b c = Hero"],
         target: "(a -> d) -> (b -> d)  -> (c -> d) -> Zero a b c ->  Hero a d c",
+        testing:  'b = zeroToHero (undefined :: SKOLEMa -> SKOLEMd) (undefined :: SKOLEMb -> SKOLEMd) (undefined :: SKOLEMc -> SKOLEMd) Zero :: (Zero SKOLEMa SKOLEMb SKOLEMc)',
+        zeroType: '(sa -> sd) -> (sb -> sd) -> (sc -> sd) -> Zero sa sb sc', 
         availableFunctions: [
             {
                 name: "fmap",
@@ -81,6 +88,8 @@ export let levels = [
     {
         init: ["data Zero a b c d = Zero", "data Hero a b c d = Hero"],
         target: "Zero a b c d ->  Hero d d d d",
+        testing:  'b =  zeroToHero (Zero :: Zero SKOLEMa SKOLEMb SKOLEMc SKOLEMd)',
+        zeroType: 'Zero sa sb sc sd', 
         availableFunctions: [
             {
                 name: "f1",

@@ -164,9 +164,9 @@
                     <div class="bg-gray-100 rounded-t-md flex flex-col px-2 py-1">
                         <div class="text-lg">Your answer</div>
                         {#if validExpression}
-                            <div class="text-sm text-green-600">Your definition is valid syntax (but may fail in type check).</div>
+                            <div class="text-sm text-green-600">Your definition is in valid syntax (but may fail in type check).</div>
                         {:else}
-                            <div class="text-sm text-red-600">Your definition is invalid syntax.</div>
+                            <div class="text-sm text-red-600">Your definition is not in valid syntax, or misuses other functions.</div>
                         {/if}
                     </div>
                     <div class="code bg-white p-2 rounded-b-md">
@@ -222,10 +222,7 @@
             <div class="absolute inset-2 overflow-auto">
                 <h1 class="font-bold">To Implement</h1>
                 <div class="code bg-white my-3 p-2 rounded-md">
-                    <div>zeroToHero :: {target}</div>
-                    {#if showDiagram}
-                        <HType sig={target} {conColors} {cons} />
-                    {/if}
+                    <HType name={'zeroToHero'} variant={showDiagram ? 'diagram' : 'text'} sig={target} {conColors} {cons} />
                 </div>
 
                 <h1 class="font-bold">Available Functions</h1>

@@ -68,7 +68,7 @@ export let levels = [
     {
         init: ["data Zero a b c = Zero", "data Hero a b c = Hero"],
         target: "(a -> d) -> (b -> d)  -> (c -> d) -> Zero a b c ->  Hero a d c",
-        testing:  'b = zeroToHero (undefined :: SKOLEMa -> SKOLEMd) (undefined :: SKOLEMb -> SKOLEMd) (undefined :: SKOLEMc -> SKOLEMd) Zero :: (Zero SKOLEMa SKOLEMb SKOLEMc)',
+        testing:  'b = zeroToHero (undefined :: SKOLEMa -> SKOLEMd) (undefined :: SKOLEMb -> SKOLEMd) (undefined :: SKOLEMc -> SKOLEMd) (Zero :: Zero SKOLEMa SKOLEMb SKOLEMc)',
         zeroType: '(sa -> sd) -> (sb -> sd) -> (sc -> sd) -> Zero sa sb sc', 
         availableFunctions: [
             {

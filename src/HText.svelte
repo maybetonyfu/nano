@@ -28,7 +28,7 @@
             <svelte:self ast={ast['result']}></svelte:self>
         </div>
     {:else if ast['type'] === nodeType.LIST}
-        <div>[]</div> 
+        <div>[</div> 
         <svelte:self ast={ast['child']} ></svelte:self>
         <div>]</div>
     {:else if ast['type'] === nodeType.UNIT}

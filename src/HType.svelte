@@ -49,7 +49,7 @@
                 })
             )
 
-            const _varSymbols = Array.from(names.vars).reduce((accu, curr, currInd) => {
+            const _varSymbols = Array.from(names.vars).toSorted().reduce((accu, curr, currInd) => {
                 return accu.set(curr, lower[currInd])
             }, new Map())
 

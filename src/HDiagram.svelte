@@ -9,6 +9,7 @@
     let conColors = getContext('conColors');
     let classColors = getContext('classColors');
     let typeClasses = getContext('typeClasses')
+    let varSymbols = getContext('varSymbols')
     let currentClasses;
     let color;
     $: {
@@ -51,7 +52,7 @@
 {:else if ast.type === nodeType.PAREN}
     <svelte:self hasSibling={hasSibling} ast={ast.child}></svelte:self>
 {:else if ast.type === nodeType.VAR}
-    <Tile color={color} hasSibling={hasSibling} text={ast.source} predicates={currentClasses}></Tile>
+    <Tile color={color} hasSibling={hasSibling} text={$varSymbols.get(ast.source)} predicates={currentClasses}></Tile>
 {:else if ast.type === nodeType.UNIT}
     <Tile color={color} hasSibling={hasSibling} text={'( )'}></Tile>
 {:else if ast.type === nodeType.CON}

@@ -138,7 +138,7 @@
     }
 
     .app {
-        grid-template-rows: 30px minmax(20px, auto);
+        grid-template-rows: 15px minmax(20px, auto);
         grid-template-columns: 35px minmax(20px, auto);
     }
 
@@ -151,7 +151,7 @@
     }
 
     .function {
-        grid-template-rows: 20px minmax(20px, auto);
+        grid-template-rows: 15px minmax(20px, auto);
         grid-template-columns: minmax(20px, auto) 20px minmax(20px, auto);
     }
 
@@ -168,7 +168,7 @@
     }
 
     .function-curried {
-        grid-template-rows: 20px minmax(20px, auto);
+        grid-template-rows: 15px minmax(20px, auto);
         grid-template-columns: minmax(20px, auto) 25px;
     }
 
@@ -189,7 +189,7 @@
         position: absolute;
         top: 3px;
         left: 10px;
-        height: 1rem;
+        height: 12px;
         fill: white;
     }
 

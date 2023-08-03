@@ -9,6 +9,7 @@
     let conColors = writable({});
     let cons = writable(new Set());
     let actualType = 'a'
+    let validExpression = true
 
     $: currentLevel = levels[level - 1];
     $: target = currentLevel.target;
@@ -59,17 +60,27 @@
         );
         let text = [
                 ...init,
+                `data SKOLEMa = A`,
+                `data SKOLEMb = B`,
+                `data SKOLEMc = C`,
+                `data SKOLEMd = D`,
+                `data SKOLEMe = E`,
                 ...funs,
                 answer,
+                'b = zeroToHero (Zero :: Zero SKOLEMa)',
             ].join("\n");
-            let queryResponse = await fetch('https://nano.typecheck.me/zeroToHero', {
+            let queryResponse = await fetch('https://nano.typecheck.me/b', {
                 method: "POST",
                 body: text,
                 headers: { "Content-Type": "text/plain" },
             })
             let queryResult = await queryResponse.json();
             if (queryResult['status'] === 'ok' && queryResult['message'].includes('::')) {
-                actualType = queryResult["message"].split("::")[1].trim();
+                actualType = 'Zero sa -> ' + queryResult["message"].split("::")[1].trim().replaceAll('SKOLEM', 's');
+                validExpression = true
+            } else {
+                validExpression = false
+
             }
     })()
 
@@ -142,11 +153,27 @@
                 <div class="code p-2 bg-white rounded-t-md">
                     zeroToHero :: {target}
                 </div>
+
                 <textarea
                     spellcheck="false"
                     class="code bg-white w-full p-2 h-full outline-none rounded-b-md"
                     bind:value={answer}
                 ></textarea>
+
+                <div class="flex flex-col mt-2 ">
+                    <div class="bg-gray-100 rounded-t-md flex flex-col px-2 py-1">
+                        <div class="text-lg">Your answer</div>
+                        {#if validExpression}
+                            <div class="text-sm text-green-600">Your definition is valid syntax (but may fail in type check).</div>
+                        {:else}
+                            <div class="text-sm text-red-600">Your definition is invalid syntax.</div>
+                        {/if}
+                    </div>
+                    <div class="code bg-white p-2 rounded-b-md">
+                            <HType name={'zeroToHero'} variant={showDiagram ? 'diagram' : 'text'} sig={actualType} {conColors} {cons} />
+                    </div>
+                </div>
+ 
             </div>
 
             <div class="output h-1/2 flex flex-col items-start">
@@ -201,20 +228,11 @@
                     {/if}
                 </div>
 
-                <h1 class="font-bold">Actual Type</h1>
-                <div class="code bg-white my-3 p-2 rounded-md">
-                    <div>zeroToHero :: {actualType}</div>
-                    {#if showDiagram}
-                        <HType sig={actualType} {conColors} {cons} />
-                    {/if}
-                </div>
                 <h1 class="font-bold">Available Functions</h1>
                 {#each availableFunctions as fun}
                     <div class="code bg-white my-2 p-2 rounded-md">
-                        <div>{fun.name} :: {fun.sig}</div>
-                        {#if showDiagram}
-                            <HType sig={fun.sig} {conColors} {cons} />
-                        {/if}
+                   
+                        <HType name={fun.name} variant={showDiagram ? 'diagram' : 'text'} sig={fun.sig} {conColors} {cons} />
                     </div>
                 {/each}
             </div>

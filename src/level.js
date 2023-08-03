@@ -2,6 +2,7 @@ export let levels = [
     {
         init: ["data Zero a = Zero", "data Hero a = Hero"],
         target: "Zero a -> Hero a",
+        testing: 'zeroToHero Zero = undefined',
         availableFunctions: [
             {name: "runZero", sig: "Zero a -> a", comment: ""},
             {name: "mkHero", sig: "a -> Hero a", comment: ""},
@@ -11,10 +12,12 @@ export let levels = [
                 comment: "",
             },
         ],
+
     },
     {
         init: ["data Zero a = Zero", "data Hero a = Hero"],
         target: "Zero a -> Hero (a, a)",
+        testing: 'zeroToHero Zero = undefined',
         availableFunctions: [
             {name: "f1", sig: "Zero a -> Hero a", comment: ""},
             {name: "f2", sig: "Zero a -> (a, a)", comment: ""},
@@ -45,6 +48,7 @@ export let levels = [
         init: ["data Zero a b c = Zero", "data Hero a b = Hero"],
         target: "Zero a b c -> Hero c a",
         answer: "zeroToHero = undefined",
+        testing: 'zeroToHero Zero = undefined',
         availableFunctions: [
             {name: "f1", sig: "Zero a b c-> Zero c b a", comment: ""},
             {name: "f2", sig: "Zero a b c -> Zero a c c", comment: ""},

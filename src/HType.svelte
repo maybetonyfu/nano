@@ -10,20 +10,25 @@
     } from "./color.js"
     import HDiagram from "./HDiagram.svelte";
     import {setContext} from "svelte";
-
+    import HText from "./HText.svelte";
+    
     export let sig;
     export let conColors;
     export let cons
-
+    export let variant = 'text'
+    export let name;
     let ast = {}
     let vars = new Set()
     let varColors = writable({})
+    let varSymbols = writable(new Map())
     let classColors = writable({})
     let typeClasses = writable(new Map())
+    const lower = 'abcdefghijklmnopqrstuvwxyz'
     setContext('varColors', varColors)
     setContext('conColors', conColors)
     setContext('classColors', classColors)
     setContext('typeClasses', typeClasses)
+    setContext('varSymbols', varSymbols)
 
     $: {
         const matchResult = haskellType.match(sig)
@@ -43,6 +48,10 @@
                     return [v, localVarColors[i]]
                 })
             )
+
+            const _varSymbols = Array.from(names.vars).reduce((accu, curr, currInd) => {
+                return accu.set(curr, lower[currInd])
+            }, new Map())
 
             const _conColors = Object.fromEntries(
                 Array.from($cons).map((c, i) => {
@@ -70,11 +79,24 @@
 
             varColors.set(_varColors)
             conColors.set(_conColors)
+            varSymbols.set(_varSymbols)
         }
 
     }
 
 </script>
-<div class="w-max my-2">
-    <HDiagram ast={ast} hasSibling={false}></HDiagram>
+<div class="w-max my-2 flex flex-col items-start">
+    {#if variant === 'text'}
+        <div class="flex gap-x-2">
+            <div>{name} ::</div>
+            <HText ast={ast}> </HText>
+        </div>
+    {:else}
+        <div class="flex gap-x-2">
+            <div>{name} ::</div>
+            <HText ast={ast}> </HText>
+        </div>
+        <HDiagram ast={ast} hasSibling={false}></HDiagram>
+    {/if}
+
 </div>

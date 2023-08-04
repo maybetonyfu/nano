@@ -3,7 +3,7 @@
     import {levels} from "./level.js";
     import HType from "./HType.svelte";
     let level = 1;
-    let intro = true;
+    let intro = false;
     let status = ["Init", "You did not make any changes."];
     let answer = "zeroToHero = undefined";
     let conColors = writable({});
@@ -103,9 +103,13 @@
             alert("This is the last puzzle")
         }
     }
+
     let dismiss = () => {
         intro = false
-        console.log('hello')
+    }
+
+    let toggleDiagram = () => {
+        showDiagram = !showDiagram
     }
 </script>
 
@@ -139,7 +143,13 @@
         <div>
             Level {level} / {levels.length}
         </div>
-        <div></div>
+        <div class="flex gap-2 items-center">
+            <div>Toggle Diagram</div>
+            <button on:click={toggleDiagram}
+                class={"flex items-center space-x-2 bg-gray-300 w-14 h-8 px-1 rounded-full " + (showDiagram ? "justify-end" : 'justify-start') }>
+                <div class={"rounded-full w-6 h-6 " + (showDiagram ? "bg-green-500" : 'bg-gray-700')}></div>
+            </button>
+        </div>
     </nav>
     <section class="left h-full flex">
         <div class="w-1/2 p-2 flex flex-col h-full w-full">

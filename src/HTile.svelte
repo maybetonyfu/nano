@@ -139,7 +139,7 @@
 
     .app {
         grid-template-rows: 15px minmax(20px, auto);
-        grid-template-columns: 35px minmax(20px, auto);
+        grid-template-columns: 35px minmax(15px, auto);
     }
 
     .args {
@@ -152,7 +152,7 @@
 
     .function {
         grid-template-rows: 15px minmax(20px, auto);
-        grid-template-columns: minmax(20px, auto) 20px minmax(20px, auto);
+        grid-template-columns: minmax(15px, auto) 20px minmax(15px, auto);
     }
 
     .arg {
@@ -169,7 +169,7 @@
 
     .function-curried {
         grid-template-rows: 15px minmax(20px, auto);
-        grid-template-columns: minmax(20px, auto) 25px;
+        grid-template-columns: minmax(15px, auto) 25px;
     }
 
     .inner {

@@ -153,26 +153,18 @@
     </nav>
     <section class="left h-full flex">
         <div class="w-1/2 p-2 flex flex-col h-full w-full">
-            <div class=" h-1/2 flex flex-col">
-                <div class="bg-blue-200 rounded-md p-2 mb-2">
-                    Please complete the following code. 
-                    Click the <span class="inline-block bg-blue-300 px-1 py-0.5 rounded-md">Attempt</span>
-                    button at top left to check your answer. The
-                    type is defined for you. Change only the function
-                    declaration. Available functions are listed on the
-                    right side.
-                </div>
-                <div class="code p-2 bg-white rounded-t-md">
-                    zeroToHero :: {target}
-                </div>
+            <div class=" h-1/2 flex flex-col gap-y-2">
 
-                <textarea
-                    spellcheck="false"
-                    class="code bg-white w-full p-2 h-full outline-none rounded-b-md"
-                    bind:value={answer}
-                ></textarea>
+                <!--<div class="bg-blue-200 rounded-md p-2">-->
+                <!--    Please complete the following code. -->
+                <!--    Click the <span class="inline-block bg-blue-300 px-1 py-0.5 rounded-md">Attempt</span>-->
+                <!--    button at top left to check your answer. The-->
+                <!--    type is defined for you. Change only the function-->
+                <!--    declaration. Available functions are listed on the-->
+                <!--    right side.-->
+                <!--</div>-->
 
-                <div class="flex flex-col mt-2 ">
+                <div class="flex flex-col ">
                     <div class="bg-gray-100 rounded-t-md flex flex-col px-2 py-1">
                         <div class="text-lg">Your answer</div>
                         {#if validExpression}
@@ -185,6 +177,21 @@
                             <HType name={'zeroToHero'} variant={showDiagram ? 'diagram' : 'text'} sig={actualType} {conColors} {cons} />
                     </div>
                 </div>
+
+                <div class="flex flex-col h-full">
+
+                <div class="code p-2 bg-white rounded-t-md">
+                    zeroToHero :: {target}
+                </div>
+
+                <textarea
+                    spellcheck="false"
+                    class="code bg-white w-full p-2 h-full outline-none rounded-b-md"
+                    bind:value={answer}
+                ></textarea>
+                </div>
+
+
  
             </div>
 

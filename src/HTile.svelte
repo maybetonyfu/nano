@@ -153,7 +153,7 @@
     .function {
         grid-template-rows: 15px minmax(20px, auto);
         grid-template-columns: minmax(15px, auto) 20px minmax(15px, auto);
-    }
+    }   
 
     .arg {
         height: 100%;

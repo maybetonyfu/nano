@@ -30,7 +30,10 @@
     let handleAttempt = () => {
         if (answer.includes("undefined")) {
             status = ["failed", "Using undefined is not allowed"];
-        } else {
+        } else if (answer.slice(10).includes('zeroToHero')) {
+            status = ['failed', 'Cannot recursively define the function']
+        }   
+        else {
             checking = typeCheck(answer);
         }
     };

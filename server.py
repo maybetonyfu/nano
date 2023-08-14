@@ -20,7 +20,7 @@ app.add_middleware(
 
 
 @app.post("/{name}")
-def query(name: str, body:str = Body("")):
+def query(name: str, body:str = Body()):
     fp = tempfile.NamedTemporaryFile(suffix='.hs', delete=False)
     file = f'''
 {{-# LANGUAGE NoImplicitPrelude #-}}
@@ -42,7 +42,7 @@ main = undefined
 
 
 @app.post("/")
-def check(body:str = Body("")):
+def check(body:str = Body()):
     fp = tempfile.NamedTemporaryFile(suffix='.hs', delete=False)
     file = f'''
 {{-# LANGUAGE NoImplicitPrelude #-}}

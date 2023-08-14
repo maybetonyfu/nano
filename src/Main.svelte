@@ -50,7 +50,7 @@
             `zeroToHero :: ${target}`,
             lhs + t,
         ].join("\n");
-        let response = await fetch("https://nano.typecheck.me/", {
+        let response = await fetch("https://nano-znog.onrender.com/", {
             method: "POST",
             body: text,
             headers: {"Content-Type": "text/plain"},
@@ -75,7 +75,7 @@
             lhs + answer,
             testing,
         ].join("\n");
-        let queryResponse = await fetch('https://nano.typecheck.me/b', {
+        let queryResponse = await fetch('https://nano-znog.onrender.com/b', {
             method: "POST",
             body: text,
             headers: {"Content-Type": "text/plain"},

@@ -1,15 +1,17 @@
 <script>
-    import { writable } from "svelte/store";
+    import {writable} from "svelte/store";
     import {levels} from "./level.js";
     import HType from "./HType.svelte";
+
     let level = 1;
     let intro = false;
     let status = ["Init", "You did not make any changes."];
-    let answer = "zeroToHero = undefined";
+    let answer = "undefined";
     let conColors = writable({});
     let cons = writable(new Set());
     let actualType = 'a'
     let validExpression = true
+    let pointFree = false
 
     $: currentLevel = levels[level - 1];
     $: target = currentLevel.target;
@@ -20,20 +22,19 @@
     $: showDiagram = level % 2 === 0;
     $: testing = currentLevel.testing
     $: zeroType = currentLevel.zeroType
+    $: lhs = pointFree ? currentLevel.lhsPointFree : currentLevel.lhsNormal
     $: {
         if (level === levels.length && status[0] === "ok") {
             confirm("You have completed all puzzles. Congratulations!");
         }
     }
     let checking = Promise.resolve();
-
     let handleAttempt = () => {
         if (answer.includes("undefined")) {
             status = ["failed", "Using undefined is not allowed"];
-        } else if (answer.slice(10).includes('zeroToHero')) {
+        } else if (answer.includes('zeroToHero')) {
             status = ['failed', 'Cannot recursively define the function']
-        }   
-        else {
+        } else {
             checking = typeCheck(answer);
         }
     };
@@ -47,12 +48,12 @@
             "und = undefined",
             ...funs,
             `zeroToHero :: ${target}`,
-            t,
+            lhs + t,
         ].join("\n");
         let response = await fetch("https://nano.typecheck.me/", {
             method: "POST",
             body: text,
-            headers: { "Content-Type": "text/plain" },
+            headers: {"Content-Type": "text/plain"},
         });
         let result = await response.json();
         status = [result["status"], result["message"]];
@@ -64,35 +65,36 @@
             (f) => `${f.name} :: ${f.sig}\n${f.name} = undefined`
         );
         let text = [
-                ...init,
-                `data SKOLEMa = A`,
-                `data SKOLEMb = B`,
-                `data SKOLEMc = C`,
-                `data SKOLEMd = D`,
-                `data SKOLEMe = E`,
-                ...funs,
-                answer,
-                testing,
-            ].join("\n");
-            let queryResponse = await fetch('https://nano.typecheck.me/b', {
-                method: "POST",
-                body: text,
-                headers: { "Content-Type": "text/plain" },
-            })
-            let queryResult = await queryResponse.json();
-            if (queryResult['status'] === 'ok' && queryResult['message'].includes('::')) {
-                actualType = zeroType + ' -> ' + queryResult["message"].split("::")[1].trim().replaceAll('SKOLEM', 's');
-                validExpression = true
-            } else {
-                validExpression = false
+            ...init,
+            `data SKOLEMa = A`,
+            `data SKOLEMb = B`,
+            `data SKOLEMc = C`,
+            `data SKOLEMd = D`,
+            `data SKOLEMe = E`,
+            ...funs,
+            lhs + answer,
+            testing,
+        ].join("\n");
+        let queryResponse = await fetch('https://nano.typecheck.me/b', {
+            method: "POST",
+            body: text,
+            headers: {"Content-Type": "text/plain"},
+        })
+        let queryResult = await queryResponse.json();
+        if (queryResult['status'] === 'ok' && queryResult['message'].includes('::')) {
+            actualType = zeroType + ' -> ' + queryResult["message"].split("::")[1].trim().replaceAll('SKOLEM', '_');
+            console.log(actualType)
+            validExpression = true
+        } else {
+            validExpression = false
 
-            }
+        }
     })()
 
     let nextLevel = () => {
         level = level + 1;
         status = ["Init", "You did not make any changes."];
-        answer = "zeroToHero = undefined";
+        answer = "undefined";
         actualType = 'a'
     };
 
@@ -100,8 +102,8 @@
         if (level < levels.length) {
             level = level + 1
             status = ["Init", "You did not make any changes."];
-             answer = "zeroToHero = undefined";
-             actualType = 'a'
+            answer = "undefined";
+            actualType = 'a'
         } else {
             alert("This is the last puzzle")
         }
@@ -111,15 +113,22 @@
         intro = false
     }
 
+    let togglePointFree = () => {
+        pointFree = !pointFree
+    }
+
     let toggleDiagram = () => {
         showDiagram = !showDiagram
     }
 </script>
 
 <dialog open={intro} class=" bg-indigo-800 inset-y-1/2 text-white p-10 z-10 rounded-md w-1/2">
-    <p class="my-2">Welcome to the game of Zero to Hero. In this game, you will complete each level by implementing the function "zeroToHero". 
-        This function convert a "Zero" type value to a "Hero" type value. The definition of "Zero" and "Hero" may vary from level to level. 
-        Each level has a list of functions available. Make sure to use them as they are the only functions you can use.</p>
+    <p class="my-2">Welcome to the game of Zero to Hero. In this game, you will complete each level by implementing the
+        function "zeroToHero".
+        This function convert a "Zero" type value to a "Hero" type value. The definition of "Zero" and "Hero" may vary
+        from level to level.
+        Each level has a list of functions available. Make sure to use them as they are the only functions you can
+        use.</p>
     <form method="dialog">
         <button class="bg-green-200 text-black px-4 py-1 rounded-md" on:click={dismiss}>OK</button>
     </form>
@@ -129,17 +138,20 @@
     <nav class=" flex bg-gray-100 p-1 justify-between items-center">
         <div>
             <button
-                class="bg-blue-300 px-2 py-1 rounded-md"
-                on:click={handleAttempt}>Attempt</button
+                    class="bg-blue-300 px-2 py-1 rounded-md"
+                    on:click={handleAttempt}>Attempt
+            </button
             >
             <button
-                class="bg-blue-300 px-2 py-1 rounded-md"
-                on:click={skip}>Skip</button
+                    class="bg-blue-300 px-2 py-1 rounded-md"
+                    on:click={skip}>Skip
+            </button
             >
             {#if showNextLevel}
                 <button
-                    class="bg-green-500 text-white px-2 py-1 rounded-md"
-                    on:click={nextLevel}>Next Puzzle</button
+                        class="bg-green-500 text-white px-2 py-1 rounded-md"
+                        on:click={nextLevel}>Next Puzzle
+                </button
                 >
             {/if}
         </div>
@@ -149,114 +161,116 @@
         <div class="flex gap-2 items-center">
             <div>Toggle Diagram</div>
             <button on:click={toggleDiagram}
-                class={"flex items-center space-x-2 bg-gray-300 w-14 h-8 px-1 rounded-full " + (showDiagram ? "justify-end" : 'justify-start') }>
+                    class={"flex items-center space-x-2 bg-gray-300 w-14 h-8 px-1 rounded-full " + (showDiagram ? "justify-end" : 'justify-start') }>
                 <div class={"rounded-full w-6 h-6 " + (showDiagram ? "bg-green-500" : 'bg-gray-700')}></div>
             </button>
         </div>
     </nav>
     <section class="left h-full flex">
-        <div class="w-1/2 p-2 flex flex-col h-full w-full">
-            <div class=" h-1/2 flex flex-col gap-y-2">
+        <div class="w-1/2 p-2 flex flex-col h-full w-full gap-y-2">
+            <div class=" flex flex-col">
+                <h1 class="bg-gray-300 text-gray-700 font-bold p-2 rounded-t-md"> To Implement</h1>
+                <div class="code bg-white p-2 rounded-b-md">
+                    <HType name={'zeroToHero'} variant={showDiagram ? 'diagram' : 'text'} sig={target}
+                           {conColors} {cons}/>
+                </div>
+            </div>
+            <div  class="flex flex-col">
+                <h1 class="bg-gray-300 text-gray-700 font-bold p-2 rounded-t-md"> Your Answer</h1>
 
-                <!--<div class="bg-blue-200 rounded-md p-2">-->
-                <!--    Please complete the following code. -->
-                <!--    Click the <span class="inline-block bg-blue-300 px-1 py-0.5 rounded-md">Attempt</span>-->
-                <!--    button at top left to check your answer. The-->
-                <!--    type is defined for you. Change only the function-->
-                <!--    declaration. Available functions are listed on the-->
-                <!--    right side.-->
-                <!--</div>-->
-
-                <div class="flex flex-col ">
-                    <div class="bg-gray-100 rounded-t-md flex flex-col px-2 py-1">
-                        <div class="text-lg">Your answer</div>
-                        {#if validExpression}
-                            <div class="text-sm text-green-600">Your definition is in valid syntax (but may fail in type check).</div>
-                        {:else}
-                            <div class="text-sm text-red-600">Your definition is not in valid syntax, or misuses other functions.</div>
-                        {/if}
+                <div class="code bg-white p-2">
+                    <HType name={'zeroToHero'} variant={showDiagram ? 'diagram' : 'text'} sig={actualType}
+                           {conColors} {cons}/>
+                </div>
+                {#if validExpression}
+                    <div class="p-2 text-sm text-black bg-green-200 rounded-b-md">Your definition is in valid syntax (but may fail in type
+                        check).
                     </div>
-                    <div class="code bg-white p-2 rounded-b-md">
-                            <HType name={'zeroToHero'} variant={showDiagram ? 'diagram' : 'text'} sig={actualType} {conColors} {cons} />
+                {:else}
+                    <div class="p-2 text-sm text-black bg-red-200 rounded-b-md">Your definition is not in valid syntax, or misuses other
+                        functions.
+                    </div>
+                {/if}
+            </div>
+            <div class="flex flex-col h-1/3">
+                <div class="bg-gray-300 text-gray-700 font-bold p-2 rounded-t-md flex justify-between items-center">
+                    <h1 >Edit code here </h1>
+                    <div class="flex gap-x-2 items-center">
+                        <h2>Point free</h2>
+                        <button on:click={togglePointFree}
+                                class={"flex items-center space-x-2 bg-gray-400 w-14 h-8 px-1 rounded-full " + (pointFree ? "justify-end" : 'justify-start') }>
+                            <div class={"rounded-full w-6 h-6 " + (pointFree ? "bg-green-500" : 'bg-gray-700')}></div>
+                        </button>
                     </div>
                 </div>
 
-                <div class="flex flex-col h-full">
-
-                <div class="code p-2 bg-white rounded-t-md">
-                    zeroToHero :: {target}
-                </div>
-
-                <textarea
-                    spellcheck="false"
-                    class="code bg-white w-full p-2 h-full outline-none rounded-b-md"
-                    bind:value={answer}
-                ></textarea>
-                </div>
 
 
- 
+                    <div class="p-2 code bg-white font-bold text-gray-600"> {lhs} </div>
+                    <div class="flex h-full">
+                        <div class="w-8 bg-white border-r-2"></div>
+                        <textarea
+                                spellcheck="false"
+                                class="code bg-white w-full p-2 h-full outline-none h-full"
+                                bind:value={answer}
+                        ></textarea>
+                    </div>
             </div>
 
-            <div class="output h-1/2 flex flex-col items-start">
+            <div class="output flex flex-grow flex-col items-start">
                 {#await checking}
                     <div
-                        class="p-2 bg-gray-400 text-white my-2 rounded-md w-full"
+                            class="p-2 bg-gray-400 text-white  rounded-t-md w-full"
                     >
-                         Status: Checking
+                        Status: Checking
                     </div>
                 {:then _}
                     {#if status[0] === "ok"}
                         <div
-                            class="p-2 bg-green-500 text-white my-2 rounded-md w-full"
+                                class="p-2 bg-green-500 text-white rounded-t-md w-full"
                         >
-                        Status: Passed
+                            Status: Passed
                         </div>
                     {:else if status[0] === "failed"}
                         <div
-                            class="p-2 bg-red-500 text-white my-2 rounded-md w-full"
+                                class="p-2 bg-red-500 text-white rounded-t-md w-full"
                         >
-                        Status: Failed
+                            Status: Failed
                         </div>
                     {:else}
                         <div
-                            class="p-2 bg-gray-400 text-white my-2 rounded-md w-full"
+                                class="p-2 bg-gray-400 text-white rounded-t-md w-full"
                         >
-                        Status: Init
+                            Status: Init
                         </div>
                     {/if}
                 {/await}
 
-                <div class="p-2 bg-gray-100 rounded-t-md">Output</div>
-                <div
-                    class="p-2 bg-gray-700 text-white rounded-b-md rounded-r-md h-full w-full relative"
-                >
+                <div class="p-2 bg-gray-700 text-white rounded-b-md h-full w-full relative">
                     <div class="absolute inset-2 overflow-auto">
                         <pre>{status[1]}</pre>
                     </div>
                 </div>
             </div>
+
         </div>
 
-        <aside
+    <aside
             class="right m-2 p-2 w-1/2 bg-gray-100 w-full rounded-md relative"
-        >
-            <div class="absolute inset-2 overflow-auto">
-                <h1 class="font-bold">To Implement</h1>
-                <div class="code bg-white my-3 p-2 rounded-md">
-                    <HType name={'zeroToHero'} variant={showDiagram ? 'diagram' : 'text'} sig={target} {conColors} {cons} />
-                </div>
+    >
+        <div class="absolute inset-2 overflow-auto">
 
-                <h1 class="font-bold">Available Functions</h1>
-                {#each availableFunctions as fun}
-                    <div class="code bg-white my-2 p-2 rounded-md">
-                   
-                        <HType name={fun.name} variant={showDiagram ? 'diagram' : 'text'} sig={fun.sig} {conColors} {cons} />
-                    </div>
-                {/each}
-            </div>
-        </aside>
+            <h1 class="font-bold">Available Functions</h1>
+            {#each availableFunctions as fun}
+                <div class="code bg-white my-2 p-2 rounded-md">
+                    <HType name={fun.name} variant={showDiagram ? 'diagram' : 'text'} sig={fun.sig} {conColors}
+                           {cons}/>
+                </div>
+            {/each}
+        </div>
+    </aside>
     </section>
+
 </main>
 
 <style>

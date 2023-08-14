@@ -38,7 +38,7 @@
             ast = adapter.parse()
             const names = gatherNames(ast)
 
-            vars = (names.vars)
+            vars = names.vars
             Array.from(names.cons).forEach(c => {
                 $cons.add(c)
             })
@@ -86,17 +86,13 @@
 
 </script>
 <div class="w-max my-2 flex flex-col items-start">
-    {#if variant === 'text'}
         <div class="flex gap-x-2">
             <div>{name} ::</div>
-            <HText ast={ast}> </HText>
+            <HText ast={ast} />
         </div>
-    {:else}
-        <div class="flex gap-x-2">
-            <div>{name} ::</div>
-            <HText ast={ast}> </HText>
-        </div>
-        <HDiagram ast={ast} hasSibling={false}></HDiagram>
+
+    {#if variant === 'diagram'}
+        <HDiagram ast={ast} hasSibling={false} />
     {/if}
 
 </div>

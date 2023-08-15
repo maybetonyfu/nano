@@ -1,5 +1,6 @@
 export let levels = [
     {
+        name: 'Trial',
         init: ["data Zero a = DontUseMeZero", "data Hero a = DontUseMeHero"],
         target: "Zero a -> Hero a",
         testing: 'b = zeroToHero (DontUseMeZero :: Zero SKOLEMa)',
@@ -18,6 +19,7 @@ export let levels = [
 
     },
     {
+        name: 'Clone',
         init: ["data Zero a = DontUseMeZero", "data Hero a = DontUseMeHero"],
         target: "Zero a -> Hero (a, a)",
         testing: 'b = zeroToHero (DontUseMeZero :: Zero SKOLEMa)',
@@ -28,6 +30,27 @@ export let levels = [
             {name: "f1", sig: "Zero a -> Hero a", comment: ""},
             {name: "f2", sig: "Zero a -> (a, a)", comment: ""},
             {name: "f3", sig: "Hero a -> Hero (a, a)", comment: ""},
+            {
+                name: "(.)",
+                sig: "(b -> c) -> (a -> b) -> a -> c",
+                comment: "",
+            },
+        ],
+    },
+    {
+        name: 'Tuple',
+        init: ["data Zero a b = DontUseMeZero", "data Hero a = DontUseMeHero"],
+        target: "Zero a b -> Hero (a, b)",
+        testing: 'b = zeroToHero (DontUseMeZero :: Zero SKOLEMa SKOLEMb)',
+        zeroType: 'Zero _a _b',
+        lhsNormal: 'zeroToHero z =',
+        lhsPointFree: 'zeroToHero =',
+        availableFunctions: [
+            {name: "fst", sig: "(a, b) -> a", comment: ""},
+            {name: "snd", sig: "(a, b) -> b", comment: ""},
+            {name: "f1", sig: "Zero a b -> Zero a (a, b)", comment: ""},
+            {name: "f2", sig: "Zero a b -> Hero (b, a)", comment: ""},
+            {name: "f3", sig: "Zero a b -> (Hero a, Hero b)", comment: ""},
             {
                 name: "(.)",
                 sig: "(b -> c) -> (a -> b) -> a -> c",
@@ -54,6 +77,28 @@ export let levels = [
             },
         ],
     },
+    {
+        name: "Curry",
+        init: ["data Zero a = DontUseMeZero", "data Hero a = DontUseMeHero"],
+        target: "Zero (a -> b, a) -> Hero b",
+        testing: 'b = zeroToHero (DontUseMeZero :: Zero (SKOLEMa -> SKOLEMb, SKOLEMa))',
+        zeroType: 'Zero (_a -> _b, _a)',
+        lhsNormal: 'zeroToHero z =',
+        lhsPointFree: 'zeroToHero =',
+        availableFunctions: [
+            {name: "f1", sig: "Zero (a, b) -> (Zero a, Zero b)", comment: ""},
+            {name: "f2", sig: "Zero (a, b) -> Hero b", comment: ""},
+            {name: "f3", sig: "Zero a -> Hero a", comment: ""},
+            {name: "(<*>)", sig: "Zero (a -> b) -> Zero a -> Zero b", comment: ""},
+            {name: 'uncurry', sig: '(a -> b -> c) -> (a, b) -> c'},
+            {
+                name: "(.)",
+                sig: "(b -> c) -> (a -> b) -> a -> c",
+                comment: "",
+            },
+        ],
+    },
+
     {
         init: ["data Zero a b c = DontUseMeZero", "data Hero a b = DontUseMeHero"],
         target: "Zero a b c -> Hero c a",
@@ -125,50 +170,34 @@ export let levels = [
             },
         ],
     },
-    // {
-    //     init: ["data Zero a b c d = Zero", "data Hero a b c d = Hero"],
-    //     target: "Zero (a, b) (c, d) ->  Hero (a, c) (b, d)",
-    //     testing:  'b =  zeroToHero (Zero :: Zero (SKOLEMa, SKOLEMc) (SKOLEMb, SKOLEMd))',
-    //     zeroType: 'Zero (_a, _c) (_b, _d)', 
-    //     availableFunctions: [
-    //         {
-    //             name: "f1",
-    //             sig: "Zero (a, b) (c, d) -> (Zero a b, (c, d))",
-    //             comment: "",
-    //         },
-    //         {
-    //             name: 'fst',
-    //             sig: '(a, b) -> a'
-    //         },
-    //         {
-    //             name: 'snd',
-    //             sig: '(a, b) -> b'
-    //         },
-    //         {
-
-    //             name: 'mkTuple',
-    //             sig: "a -> b -> (a, b)",
-    //         },
-    //         {
-
-    //             name: 'mkTupleR',
-    //             sig: "b -> a -> (a, b)",
-    //         },
-    //         {
-    //             name: "left",
-    //             sig: "Zero a b -> (a -> c) -> Zero c b",
-    //             comment: "",
-    //         },
-    //         {
-    //             name: "right",
-    //             sig: "Zero a b -> (b -> c) -> Zero a c",
-    //             comment: "",
-    //         },
-    //         {
-    //             name: "(.)",
-    //             sig: "(b -> c) -> (a -> b) -> a -> c",
-    //             comment: "",
-    //         },
-    //     ],
-    // },
+    {
+        init: ["data Zero a b c d = DontUseMeZero", "data Hero a = DontUseMeHero"],
+        target: "Zero (a -> b -> c -> d) a b c  -> Hero d",
+        testing:  'b =  zeroToHero (DontUseMeZero :: Zero (SKOLEMa -> SKOLEMb -> SKOLEMc -> SKOLEMd) SKOLEMa SKOLEMb SKOLEMc)',
+        zeroType: 'Zero (_a -> _b -> _c -> _d) _a _b _c',
+        lhsNormal: 'zeroToHero z =',
+        lhsPointFree: 'zeroToHero =',
+        availableFunctions: [
+            {
+                name: "f1",
+                sig: "Zero (a -> b) a c d -> Zero () b c d",
+                comment: "",
+            },
+            {
+                name: "f2",
+                sig: "Zero a b c d -> Zero b c d a",
+                comment: "",
+            },
+            {
+                name: "f3",
+                sig: "Zero a b c d -> Hero d",
+                comment: "",
+            },
+            {
+                name: "(.)",
+                sig: "(b -> c) -> (a -> b) -> a -> c",
+                comment: "",
+            },
+        ],
+    },
 ];

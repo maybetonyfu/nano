@@ -52,8 +52,8 @@
 </script>
 <section class={variant}
          style:clip-path={outerConnerStyle}
-         bind:offsetWidth={width}
-         bind:offsetHeight={height}
+         bind:clientWidth={width}
+         bind:clientHeight={height}
          style:margin-right={marginStyle}
 >
     <div class="inner"

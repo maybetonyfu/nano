@@ -203,8 +203,8 @@
                            {conColors} {cons}/>
                 </div>
                 {#if validExpression}
-                    <div class="p-2 text-sm text-black bg-green-200 rounded-b-md">Your definition has valid syntax (but may fail in type
-                        check).
+                    <div class="p-2 text-sm text-black bg-green-200 rounded-b-md">Your definition has valid syntax, but it may still fail to type
+                        check.
                     </div>
                 {:else}
                     <div class="p-2 text-sm text-black bg-red-200 rounded-b-md">{parseError}

@@ -88,7 +88,7 @@
                 ast={ast.child}></svelte:self>
     </Tile>
 {:else if ast.type === nodeType.FUN && ast.result.type === nodeType.FUN}
-    <div style="display: grid;grid-template-columns: repeat(2, auto); height: 100%">
+    <div class="flex">
         <Tile variant="function-curried" color={color} hasSibling={hasSibling}>
             <svelte:self ast={ast.arg} ></svelte:self>
 

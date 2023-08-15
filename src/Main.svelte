@@ -68,8 +68,7 @@
 
 
     let realtimeCheck = (debounce(async () => {
-        console.log('checking')
-        parseError = "Your expression is not valid"
+        parseError = "Checking ..."
         let funs = availableFunctions.map(
             (f) => `${f.name} :: ${f.sig}\n${f.name} = undefined`
         );

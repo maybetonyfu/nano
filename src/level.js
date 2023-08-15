@@ -1,8 +1,8 @@
 export let levels = [
     {
-        init: ["data Zero a = Zero", "data Hero a = Hero"],
+        init: ["data Zero a = DontUseMeZero", "data Hero a = DontUseMeHero"],
         target: "Zero a -> Hero a",
-        testing: 'b = zeroToHero (Zero :: Zero SKOLEMa)',
+        testing: 'b = zeroToHero (DontUseMeZero :: Zero SKOLEMa)',
         zeroType: 'Zero _a',
         lhsNormal: 'zeroToHero z =',
         lhsPointFree: 'zeroToHero =',
@@ -18,9 +18,9 @@ export let levels = [
 
     },
     {
-        init: ["data Zero a = Zero", "data Hero a = Hero"],
+        init: ["data Zero a = DontUseMeZero", "data Hero a = DontUseMeHero"],
         target: "Zero a -> Hero (a, a)",
-        testing: 'b = zeroToHero (Zero :: Zero SKOLEMa)',
+        testing: 'b = zeroToHero (DontUseMeZero :: Zero SKOLEMa)',
         zeroType: 'Zero _a',
         lhsNormal: 'zeroToHero z =',
         lhsPointFree: 'zeroToHero =',
@@ -36,9 +36,9 @@ export let levels = [
         ],
     },
     {
-        init: ["data Zero a b = Zero", "data Hero a b = Hero"],
+        init: ["data Zero a b = DontUseMeZero", "data Hero a b = DontUseMeHero"],
         target: "Zero a b -> Hero b b",
-        testing: 'b = zeroToHero (Zero :: Zero SKOLEMa SKOLEMb)',
+        testing: 'b = zeroToHero (DontUseMeZero :: Zero SKOLEMa SKOLEMb)',
         zeroType: 'Zero _a _b',
         lhsNormal: 'zeroToHero z =',
         lhsPointFree: 'zeroToHero =',
@@ -55,10 +55,10 @@ export let levels = [
         ],
     },
     {
-        init: ["data Zero a b c = Zero", "data Hero a b = Hero"],
+        init: ["data Zero a b c = DontUseMeZero", "data Hero a b = DontUseMeHero"],
         target: "Zero a b c -> Hero c a",
         answer: "zeroToHero = undefined",
-        testing:  'b = zeroToHero (Zero :: Zero SKOLEMa SKOLEMb SKOLEMc)',
+        testing:  'b = zeroToHero (DontUseMeZero :: Zero SKOLEMa SKOLEMb SKOLEMc)',
         zeroType: 'Zero _a _b _c',
         lhsNormal: 'zeroToHero z =',
         lhsPointFree: 'zeroToHero =',
@@ -74,9 +74,9 @@ export let levels = [
         ],
     },
     {
-        init: ["data Zero a b c = Zero", "data Hero a b c = Hero"],
+        init: ["data Zero a b c = DontUseMeZero", "data Hero a b c = DontUseMeHero"],
         target: "(a -> d) -> (b -> d)  -> (c -> d) -> Zero a b c ->  Hero a d c",
-        testing:  'b = zeroToHero (undefined :: SKOLEMa -> SKOLEMd) (undefined :: SKOLEMb -> SKOLEMd) (undefined :: SKOLEMc -> SKOLEMd) (Zero :: Zero SKOLEMa SKOLEMb SKOLEMc)',
+        testing:  'b = zeroToHero (undefined :: SKOLEMa -> SKOLEMd) (undefined :: SKOLEMb -> SKOLEMd) (undefined :: SKOLEMc -> SKOLEMd) (DontUseMeZero :: Zero SKOLEMa SKOLEMb SKOLEMc)',
         zeroType: '(_a -> _d) -> (_b -> _d) -> (_c -> _d) -> Zero _a _b _c',
         lhsNormal: 'zeroToHero ad bd cd z =',
         lhsPointFree: 'zeroToHero ad bd cd =',
@@ -96,9 +96,9 @@ export let levels = [
         ],
     },
     {
-        init: ["data Zero a b c d = Zero", "data Hero a b c d = Hero"],
+        init: ["data Zero a b c d = DontUseMeZero", "data Hero a b c d = DontUseMeHero"],
         target: "Zero a b c d ->  Hero d d d d",
-        testing:  'b =  zeroToHero (Zero :: Zero SKOLEMa SKOLEMb SKOLEMc SKOLEMd)',
+        testing:  'b =  zeroToHero (DontUseMeZero :: Zero SKOLEMa SKOLEMb SKOLEMc SKOLEMd)',
         zeroType: 'Zero _a _b _c _d',
         lhsNormal: 'zeroToHero z =',
         lhsPointFree: 'zeroToHero =',

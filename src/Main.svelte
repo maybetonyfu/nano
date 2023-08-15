@@ -2,7 +2,13 @@
     import {writable} from "svelte/store";
     import {levels} from "./level.js";
     import HType from "./HType.svelte";
-
+    const debounce = (fn, ms = 0) => {
+        let timeoutId;
+        return function(...args) {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => fn.apply(this, args), ms);
+        };
+    };
     let level = 1;
     let intro = false;
     let status = ["Init", "You did not make any changes."];
@@ -12,7 +18,7 @@
     let actualType = 'a'
     let validExpression = true
     let pointFree = false
-
+    let parseError = ""
     $: currentLevel = levels[level - 1];
     $: target = currentLevel.target;
     $: availableFunctions = currentLevel.availableFunctions;
@@ -60,7 +66,10 @@
     }
 
 
-    $: (async () => {
+
+    let realtimeCheck = (debounce(async () => {
+        console.log('checking')
+        parseError = "Your expression is not valid"
         let funs = availableFunctions.map(
             (f) => `${f.name} :: ${f.sig}\n${f.name} = undefined`
         );
@@ -87,15 +96,23 @@
             validExpression = true
         } else {
             validExpression = false
-
+            let errorMessage =  queryResult['message'].match(/error[^\|]*\|/g)
+            if (errorMessage.length !== 0) {
+                parseError = errorMessage[0].replaceAll('|', '').replaceAll(/\(line\s\d+\)/g, '').replaceAll('SKOLEM', '')
+                if (parseError.includes("Couldn't match")) {
+                    parseError = "Your definition is not well-typed."
+                }
+            }
         }
-    })()
+    }, 300))
 
     let nextLevel = () => {
         level = level + 1;
         status = ["Init", "You did not make any changes."];
         answer = "undefined";
         actualType = 'a'
+        realtimeCheck()
+
     };
 
     let skip = () => {
@@ -104,6 +121,8 @@
             status = ["Init", "You did not make any changes."];
             answer = "undefined";
             actualType = 'a'
+            realtimeCheck()
+
         } else {
             alert("This is the last puzzle")
         }
@@ -115,6 +134,8 @@
 
     let togglePointFree = () => {
         pointFree = !pointFree
+        realtimeCheck()
+
     }
 
     let toggleDiagram = () => {
@@ -161,8 +182,8 @@
         <div class="flex gap-2 items-center">
             <div>Toggle Diagram</div>
             <button on:click={toggleDiagram}
-                    class={"flex items-center space-x-2 bg-gray-300 w-14 h-8 px-1 rounded-full " + (showDiagram ? "justify-end" : 'justify-start') }>
-                <div class={"rounded-full w-6 h-6 " + (showDiagram ? "bg-green-500" : 'bg-gray-700')}></div>
+                    class={"flex items-center space-x-2 bg-gray-400 w-14 h-8 px-1 rounded-full " + (showDiagram ? "justify-end" : 'justify-start') }>
+                <div class={"rounded-full w-6 h-6 " + (showDiagram ? "bg-green-300" : 'bg-gray-800')}></div>
             </button>
         </div>
     </nav>
@@ -183,12 +204,11 @@
                            {conColors} {cons}/>
                 </div>
                 {#if validExpression}
-                    <div class="p-2 text-sm text-black bg-green-200 rounded-b-md">Your definition is in valid syntax (but may fail in type
+                    <div class="p-2 text-sm text-black bg-green-200 rounded-b-md">Your definition has valid syntax (but may fail in type
                         check).
                     </div>
                 {:else}
-                    <div class="p-2 text-sm text-black bg-red-200 rounded-b-md">Your definition is not in valid syntax, or misuses other
-                        functions.
+                    <div class="p-2 text-sm text-black bg-red-200 rounded-b-md">{parseError}
                     </div>
                 {/if}
             </div>
@@ -199,20 +219,20 @@
                         <h2>Point free</h2>
                         <button on:click={togglePointFree}
                                 class={"flex items-center space-x-2 bg-gray-400 w-14 h-8 px-1 rounded-full " + (pointFree ? "justify-end" : 'justify-start') }>
-                            <div class={"rounded-full w-6 h-6 " + (pointFree ? "bg-green-500" : 'bg-gray-700')}></div>
+                            <div class={"rounded-full w-6 h-6 " + (pointFree ? "bg-green-300" : 'bg-gray-700')}></div>
                         </button>
                     </div>
                 </div>
 
 
 
-                    <div class="p-2 code bg-white font-bold text-gray-600"> {lhs} </div>
                     <div class="flex h-full">
-                        <div class="w-8 bg-white border-r-2"></div>
+                        <div class="p-2 code bg-gray-100 font-bold text-gray-600"> {lhs} </div>
                         <textarea
                                 spellcheck="false"
-                                class="code bg-white w-full p-2 h-full outline-none h-full"
+                                class="flex-grow code bg-white p-2 outline-none"
                                 bind:value={answer}
+                                on:input={realtimeCheck}
                         ></textarea>
                     </div>
             </div>

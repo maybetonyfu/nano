@@ -85,7 +85,7 @@
     }
 
 </script>
-<div class="w-max my-2 flex flex-col items-start">
+<div class="w-max mb-1 flex flex-col items-start gap-y-3">
         <div class="flex gap-x-2">
             <div>{name} ::</div>
             <HText ast={ast} />

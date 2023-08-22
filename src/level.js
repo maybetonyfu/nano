@@ -231,7 +231,7 @@ export let levels = [
             {name: "curry", sig: "((a, b) -> c) -> a -> b -> c", comment: ""},
             {name: "uncurry", sig: "(a -> b -> c) -> (a, b) -> c", comment: ""},
             {
-                name: "(>>)",
+                name: "(>>>)",
                 sig: "(a -> b)  -> (b -> c) -> a -> c",
                 comment: "",
             },

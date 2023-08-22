@@ -25,7 +25,7 @@ export let levels = [
             {
                 name: "(.)",
                 sig: "(b -> c) -> (a -> b) -> a -> c",
-                comment: "",
+                comment: "New function",
             },
         ],
 
@@ -42,7 +42,7 @@ export let levels = [
             {name: "f1", sig: "Zero a -> Hero a", comment: ""},
             {name: "f2", sig: "Zero a -> (a, a)", comment: ""},
             {name: "f3", sig: "Hero a -> Hero (a, a)", comment: ""},
-            {name: "($)", sig: "(a -> b) -> a -> b", comment: ""},
+            {name: "($)", sig: "(a -> b) -> a -> b", comment: "New function"},
             {
                 name: "(.)",
                 sig: "(b -> c) -> (a -> b) -> a -> c",
@@ -65,7 +65,7 @@ export let levels = [
             {name: "f2", sig: "Zero a b -> Hero (b, a)", comment: ""},
             {name: "f3", sig: "Zero a b -> (Hero a, Hero b)", comment: ""},
             {name: "($)", sig: "(a -> b) -> a -> b", comment: ""},
-            {name: "curry", sig: "((a, b) -> c) -> a -> b -> c", comment: ""},
+            {name: "curry", sig: "((a, b) -> c) -> a -> b -> c", comment: "New function"},
             {
                 name: "(.)",
                 sig: "(b -> c) -> (a -> b) -> a -> c",
@@ -87,7 +87,7 @@ export let levels = [
             {name: "f4", sig: "Zero a b -> Zero b b", comment: ""},
             {name: "($)", sig: "(a -> b) -> a -> b", comment: ""},
             {name: "curry", sig: "((a, b) -> c) -> a -> b -> c", comment: ""},
-            {name: "uncurry", sig: "(a -> b -> c) -> (a, b) -> c", comment: ""},
+            {name: "uncurry", sig: "(a -> b -> c) -> (a, b) -> c", comment: "New function"},
 
             {
                 name: "(.)",
@@ -161,9 +161,9 @@ export let levels = [
             {name: "curry", sig: "((a, b) -> c) -> a -> b -> c", comment: ""},
             {name: "uncurry", sig: "(a -> b -> c) -> (a, b) -> c", comment: ""},
             {
-                name: "(>>)",
+                name: "(>>>)",
                 sig: "(a -> b)  -> (b -> c) -> a -> c",
-                comment: "",
+                comment: "New function",
             },
             {
                 name: "(.)",
@@ -199,7 +199,7 @@ export let levels = [
             {name: "curry", sig: "((a, b) -> c) -> a -> b -> c", comment: ""},
             {name: "uncurry", sig: "(a -> b -> c) -> (a, b) -> c", comment: ""},
             {
-                name: "(>>)",
+                name: "(>>>)",
                 sig: "(a -> b)  -> (b -> c) -> a -> c",
                 comment: "",
             },

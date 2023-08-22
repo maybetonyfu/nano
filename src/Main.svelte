@@ -282,6 +282,11 @@
             <h1 class="font-bold">Available Functions</h1>
             {#each availableFunctions as fun}
                 <div class="code bg-white my-2 p-2 rounded-md">
+                    {#if fun.comment}
+                        <div>
+                            <div class="text-gray-100 bg-green-600 rounded-full w-max px-3">{fun.comment}</div>
+                        </div>
+                    {/if}
                     <HType name={fun.name} variant={showDiagram ? 'diagram' : 'text'} sig={fun.sig} {conColors}
                            {cons}/>
                 </div>

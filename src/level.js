@@ -8,6 +8,18 @@ export let levels = [
         lhsNormal: 'zeroToHero z =',
         lhsPointFree: 'zeroToHero =',
         availableFunctions: [
+            {name: "f", sig: "Zero a -> Hero a", comment: ""},
+        ],
+    },
+    {
+        name: 'Trial',
+        init: ["data Zero a = DontUseMeZero", "data Hero a = DontUseMeHero"],
+        target: "Zero a -> Hero a",
+        testing: 'b = zeroToHero (DontUseMeZero :: Zero SKOLEMa)',
+        zeroType: 'Zero _a',
+        lhsNormal: 'zeroToHero z =',
+        lhsPointFree: 'zeroToHero =',
+        availableFunctions: [
             {name: "runZero", sig: "Zero a -> a", comment: ""},
             {name: "mkHero", sig: "a -> Hero a", comment: ""},
             {

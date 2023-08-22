@@ -108,7 +108,6 @@ export let levels = [
             {name: "f1", sig: "Zero a b -> Hero (a -> b)", comment: ""},
             {name: 'f2', sig: 'Zero a b -> Hero a', comment: ''},
             {name: '(<*>)', sig:'Hero (a -> b) -> Hero a -> Hero b', comment: ''},
-            {name: '(***)', sig: "(a -> b) -> (a -> c) -> a -> (b, c)", comment: ''},
             {name: "($)", sig: "(a -> b) -> a -> b", comment: ""},
             {name: "curry", sig: "((a, b) -> c) -> a -> b -> c", comment: ""},
             {name: "uncurry", sig: "(a -> b -> c) -> (a, b) -> c", comment: ""},

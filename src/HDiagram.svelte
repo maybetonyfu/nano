@@ -57,11 +57,11 @@
 {:else if ast.type === nodeType.UNIT}
     <Tile color={color} hasSibling={hasSibling} text={'( )'}></Tile>
 {:else if ast.type === nodeType.CON}
-    <Tile color={color} hasSibling={hasSibling} text={ast.source.slice(0,2)}></Tile>
+    <Tile color={color} hasSibling={hasSibling} text={ast.source}></Tile>
 {:else if ast.type === nodeType.APP}
     <Tile color={color}
           hasSibling={hasSibling}
-          text={ast.children[0].source.slice(0,2)}
+          text={ast.children[0].source}
           predicates={currentClasses}
     >
         {#each ast.children.slice(1) as child, index}

@@ -1,6 +1,9 @@
 <script>
     import chroma from 'chroma-js';
     import ListSymbol from "./ListSymbol.svelte";
+    import NumberSymbol from "./NumberSymbol.svelte";
+    import BoolSymbol from "./BoolSymbol.svelte";
+    import TupleSymbol from "./TupleSymbol.svelte";
     export let color;
     export let predicates = [];
     export let hasSibling;
@@ -64,17 +67,28 @@
          style:background-color={color}
          style:clip-path={innerConnerStyle}
     ></div>
-    {#if text !== 'Li'}
-    <span class="text" style:color={textColor}>
-        {text ? text : ''}
-    </span>
-    {:else}
+    {#if text === 'Li'}
         <div class="absolute bottom-1 left-1">
-
-        <ListSymbol class="w-5 h-5"></ListSymbol>
+            <ListSymbol class="w-5 h-5"></ListSymbol>
         </div>
-    {/if}
 
+    {:else if text === '(,)'}
+        <div class="absolute bottom-1 left-1"  style:color={textColor} >
+            <TupleSymbol class="w-6 h-6"></TupleSymbol>
+        </div>
+    {:else if text === 'Int'}
+        <div class="absolute bottom-1 left-1"  style:color={textColor} >
+            <NumberSymbol class="w-5 h-5"></NumberSymbol>
+        </div>
+    {:else if text === 'Bool'}
+        <div class="absolute bottom-1 left-1"  style:color={textColor} >
+            <BoolSymbol class="w-5 h-5"></BoolSymbol>
+        </div>
+    {:else}
+        <span class="text" style:color={textColor}>
+            {text ? text.slice(0,2) : ''}
+        </span>
+    {/if}
 
     <div class="predicates">
         {#each predicates as pred}
@@ -184,11 +198,7 @@
         fill: white;
     }
 
-    /*.list-icon {*/
-    /*    position: absolute;*/
-    /*    bottom: 8px;*/
-    /*    left: 5px;*/
-    /*}*/
+
     .predicates {
         position: absolute;
         top: 5px;
@@ -202,7 +212,7 @@
         border-radius: 5px;
         border: black 2px solid;
         width: 8px;
-        height: 4px;
+        height: 7px;
     }
     .pred-bar {
         height: 2px;

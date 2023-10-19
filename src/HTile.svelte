@@ -1,12 +1,12 @@
 <script>
     import chroma from 'chroma-js';
+    import ListSymbol from "./ListSymbol.svelte";
     export let color;
     export let predicates = [];
     export let hasSibling;
     export let icon = null;
     export let variant = 'app';
     export let text = null;
-
     const innerConner = 9
     const outerConner = 10
     const gap = 2
@@ -27,6 +27,8 @@
     $: outerConnerStyle = hasSibling ? connerStyles.outerHalf : connerStyles.outerFull;
     $: innerConnerStyle = hasSibling ? connerStyles.innerHalf : connerStyles.innerFull;
     $: marginStyle = (() => {
+        console.log(text)
+
         let offset = 0;
         if (variant === 'function-curried' && hasSibling) {
             offset = -12
@@ -62,29 +64,18 @@
          style:background-color={color}
          style:clip-path={innerConnerStyle}
     ></div>
-    {#if text !== 'List'}
+    {#if text !== 'Li'}
     <span class="text" style:color={textColor}>
         {text ? text : ''}
     </span>
-    {/if}
-    {#if text === 'List'}
-        <svg class="list-icon" width="20" height="13" viewBox="0 0 20 13" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <g clip-path="url(#clip0_140_226)">
-                <rect width="3" height="3" fill="black"/>
-                <rect y="5" width="3" height="3" fill="black"/>
-                <rect y="10" width="3" height="3" fill="black"/>
-                <rect x="5" width="15" height="3" fill="black"/>
-                <rect x="5" y="5" width="15" height="3" fill="black"/>
-                <rect x="5" y="10" width="15" height="3" fill="black"/>
-            </g>
-            <defs>
-                <clipPath id="clip0_140_226">
-                    <rect width="20" height="13" fill="white"/>
-                </clipPath>
-            </defs>
-        </svg>
+    {:else}
+        <div class="absolute bottom-1 left-1">
 
+        <ListSymbol class="w-5 h-5"></ListSymbol>
+        </div>
     {/if}
+
+
     <div class="predicates">
         {#each predicates as pred}
             <div class="pred-wrapper">
@@ -193,11 +184,11 @@
         fill: white;
     }
 
-    .list-icon {
-        position: absolute;
-        bottom: 8px;
-        left: 5px;
-    }
+    /*.list-icon {*/
+    /*    position: absolute;*/
+    /*    bottom: 8px;*/
+    /*    left: 5px;*/
+    /*}*/
     .predicates {
         position: absolute;
         top: 5px;

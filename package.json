@@ -16,7 +16,8 @@
     "@vercel/analytics": "^1.0.1",
     "chance": "^1.1.11",
     "chroma-js": "^2.4.2",
-    "ohm-js": "^17.1.0"
+    "ohm-js": "^17.1.0",
+    "svelte-spa-router": "^3.3.0"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^2.4.3",

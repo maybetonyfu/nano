@@ -68,6 +68,7 @@
     </span>
     {/if}
     {#if text === 'List'}
+        <div>List</div>
         <svg class="list-icon" width="20" height="13" viewBox="0 0 20 13" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g clip-path="url(#clip0_140_226)">
                 <rect width="3" height="3" fill="black"/>
@@ -83,8 +84,8 @@
                 </clipPath>
             </defs>
         </svg>
-
     {/if}
+
     <div class="predicates">
         {#each predicates as pred}
             <div class="pred-wrapper">
@@ -211,13 +212,15 @@
         border-radius: 5px;
         border: black 2px solid;
         width: 8px;
-        height: 4px;
+        height: 8px;
     }
+
     .pred-bar {
         height: 2px;
         width: 100%;
         background-color: black;
     }
+
     .pred-wrapper {
         display: flex;
         flex-direction: row;

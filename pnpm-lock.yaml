@@ -17,6 +17,9 @@ dependencies:
   ohm-js:
     specifier: ^17.1.0
     version: 17.1.0
+  svelte-spa-router:
+    specifier: ^3.3.0
+    version: 3.3.0
 
 devDependencies:
   '@sveltejs/vite-plugin-svelte':
@@ -487,6 +490,11 @@ packages:
       source-map-js: 1.0.2
     dev: true
 
+  /regexparam@2.0.1:
+    resolution: {integrity: sha512-zRgSaYemnNYxUv+/5SeoHI0eJIgTL/A2pUtXUPLHQxUldagouJ9p+K6IbIZ/JiQuCEv2E2B1O11SjVQy3aMCkw==}
+    engines: {node: '>=8'}
+    dev: false
+
   /rollup@3.26.3:
     resolution: {integrity: sha512-7Tin0C8l86TkpcMtXvQu6saWH93nhG3dGQ1/+l5V2TDMceTxO7kDiK6GzbfLWNNxqJXm591PcEZUozZm51ogwQ==}
     engines: {node: '>=14.18.0', npm: '>=8.0.0'}
@@ -508,6 +516,12 @@ packages:
     dependencies:
       svelte: 4.1.1
     dev: true
+
+  /svelte-spa-router@3.3.0:
+    resolution: {integrity: sha512-cwRNe7cxD43sCvSfEeaKiNZg3FCizGxeMcf7CPiWRP3jKXjEma3vxyyuDtPOam6nWbVxl9TNM3hlE/i87ZlqcQ==}
+    dependencies:
+      regexparam: 2.0.1
+    dev: false
 
   /svelte@4.1.1:
     resolution: {integrity: sha512-Enick5fPFISLoVy0MFK45cG+YlQt6upw8skEK9zzTpJnH1DqEv8xOZwizCGSo3Q6HZ7KrZTM0J18poF7aQg5zw==}

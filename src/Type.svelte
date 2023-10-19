@@ -39,7 +39,6 @@
         }
     }
 
-
 </script>
 {#if ast['type'] === undefined}
     <span>Nothing to show here</span>
@@ -76,7 +75,7 @@
 
     </Tile>
 {:else if ast.type === nodeType.LIST}
-    <Tile color={color} hasSibling={hasSibling} text="List">
+    <Tile color={color} hasSibling={hasSibling} text="Li">
         <svelte:self
                 hasSibling={hasSibling}
                 ast={ast.child}></svelte:self>

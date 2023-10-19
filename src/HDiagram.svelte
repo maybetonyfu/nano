@@ -13,6 +13,7 @@
     let currentClasses;
     let color;
     $: {
+        console.log(ast['type'])
         if (ast['type']) {
             color = calculateColor(ast, {varColors: $varColors, conColors: $conColors})
         }
@@ -82,7 +83,7 @@
 
     </Tile>
 {:else if ast.type === nodeType.LIST}
-    <Tile color={color} hasSibling={hasSibling} text="List">
+    <Tile color={color} hasSibling={hasSibling} text="Li" textColor="black">
         <svelte:self
                 hasSibling={hasSibling}
                 ast={ast.child}></svelte:self>
